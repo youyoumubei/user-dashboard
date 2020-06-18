@@ -10,8 +10,16 @@ import store from '@/store/index'
 // 菜单和路由设置
 import router from './router'
 import menuHeader from '@/menu/header'
-import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
+
+// vcharts
+import VeLine from 'v-charts/lib/line.common'
+import VePie from 'v-charts/lib/pie.common'
+import VeWordCloud from 'v-charts/lib/wordcloud.common'
+
+Vue.component(VeLine.name, VeLine)
+Vue.component(VePie.name, VePie)
+Vue.component(VeWordCloud.name, VeWordCloud)
 
 // 核心插件
 Vue.use(d2Admin)
@@ -27,7 +35,7 @@ new Vue({
     // 设置顶栏菜单
     this.$store.commit('d2admin/menu/headerSet', menuHeader)
     // 设置侧边栏菜单
-    this.$store.commit('d2admin/menu/asideSet', menuAside)
+    // this.$store.commit('d2admin/menu/asideSet', menuAside)
     // 初始化菜单搜索功能
     this.$store.commit('d2admin/search/init', menuHeader)
   },

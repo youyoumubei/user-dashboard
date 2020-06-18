@@ -63,9 +63,9 @@
           <transition name="fade-scale">
             <div v-if="!searchActive" class="d2-theme-container-main-layer" flex="dir:top">
               <!-- tab -->
-              <div class="d2-theme-container-main-header" flex-box="0">
+              <!-- <div class="d2-theme-container-main-header" flex-box="0">
                 <d2-tabs/>
-              </div>
+              </div> -->
               <!-- 页面 -->
               <div class="d2-theme-container-main-body" flex-box="1">
                 <transition :name="transitionActive ? 'fade-transverse' : ''">

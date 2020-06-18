@@ -1,46 +1,152 @@
 <template>
   <d2-container class="page">
-    <d2-page-cover>
-      <d2-icon-svg class="logo" name="d2-admin"/>
-      <template slot="footer">
-        <div class="btn-group">
-          <span class="btn-group__btn" @click="$open('https://github.com/d2-projects')">开源组织</span> |
-          <span class="btn-group__btn" @click="$open('https://fairyever.com/d2-admin/doc/zh/')">文档</span> |
-          <span class="btn-group__btn" @click="$open('https://github.com/d2-projects/d2-admin-start-kit')">简化版</span> |
-          <span class="btn-group__btn" @click="$open('https://juejin.im/user/57a48b632e958a006691b946/posts')">掘金</span> |
-          <span class="btn-group__btn" @click="$open('https://daily.fairyever.com')">日报</span> |
-          <el-popover :width="172" trigger="hover">
-            <p class="d2-mt-0 d2-mb-10">D2Projects</p>
-            <img src="./image/qr@2x.png" style="width: 172px;">
-            <span slot="reference" class="btn-group__btn btn-group__btn--link">
-              <d2-icon name="weixin"/>
-              微信公众号
-            </span>
-            <p style="font-size: 12px; margin-top: 0px; margin-bottom: 0px;">
-              官方公众号，主要推送前端技术类文章、框架资源、学习教程，以及 D2 系列项目更新信息
-            </p>
-          </el-popover>
-        </div>
-        <d2-badge/>
-        <d2-help-btn/>
-      </template>
-    </d2-page-cover>
+    <template slot="header">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="审批人">
+          <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+        </el-form-item>
+        <el-form-item label="活动区域">
+          <el-select v-model="formInline.region" placeholder="活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </template>
+    <ve-wordcloud :data="chartData"></ve-wordcloud>
   </d2-container>
 </template>
 
 <script>
-import D2HelpBtn from './components/d2-help-btn'
-import D2Badge from './components/d2-badge'
-import D2PageCover from './components/d2-page-cover'
+
 export default {
-  components: {
-    D2HelpBtn,
-    D2Badge,
-    D2PageCover
-  },
+  components: {},
   data () {
     return {
-      filename: __filename
+      chartData: {
+        columns: ['word', 'count'],
+        rows: this.getRows()
+      },
+      formInline: {
+        user: '',
+        region: ''
+      }
+    }
+  },
+  methods: {
+    onSubmit () {
+      console.log('submit!')
+    },
+    getRows () {
+      return [{
+        'word': 'visualMap',
+        'count': 22199
+      }, {
+        'word': 'continuous',
+        'count': 10288
+      }, {
+        'word': 'contoller',
+        'count': 620
+      }, {
+        'word': 'series',
+        'count': 274470
+      }, {
+        'word': 'gauge',
+        'count': 12311
+      }, {
+        'word': 'detail',
+        'count': 1206
+      }, {
+        'word': 'piecewise',
+        'count': 4885
+      }, {
+        'word': 'textStyle',
+        'count': 32294
+      }, {
+        'word': 'markPoint',
+        'count': 18574
+      }, {
+        'word': 'pie',
+        'count': 38929
+      }, {
+        'word': 'roseType',
+        'count': 969
+      }, {
+        'word': 'label',
+        'count': 37517
+      }, {
+        'word': 'emphasis',
+        'count': 12053
+      }, {
+        'word': 'yAxis',
+        'count': 57299
+      }, {
+        'word': 'name',
+        'count': 15418
+      }, {
+        'word': 'type',
+        'count': 22905
+      }, {
+        'word': 'gridIndex',
+        'count': 5146
+      }, {
+        'word': 'normal',
+        'count': 49487
+      }, {
+        'word': 'itemStyle',
+        'count': 33837
+      }, {
+        'word': 'min',
+        'count': 4500
+      }, {
+        'word': 'silent',
+        'count': 5744
+      }, {
+        'word': 'animation',
+        'count': 4840
+      }, {
+        'word': 'offsetCenter',
+        'count': 232
+      }, {
+        'word': 'inverse',
+        'count': 3706
+      }, {
+        'word': 'borderColor',
+        'count': 4812
+      }, {
+        'word': 'markLine',
+        'count': 16578
+      }, {
+        'word': 'line',
+        'count': 76970
+      }, {
+        'word': 'radiusAxis',
+        'count': 6704
+      }, {
+        'word': 'radar',
+        'count': 15964
+      }, {
+        'word': 'data',
+        'count': 60679
+      }, {
+        'word': 'dataZoom',
+        'count': 24347
+      }, {
+        'word': 'tooltip',
+        'count': 43420
+      }, {
+        'word': 'toolbox',
+        'count': 25222
+      }, {
+        'word': 'geo',
+        'count': 16904
+      }, {
+        'word': 'parallelAxis',
+        'count': 4029
+      }]
     }
   }
 }
