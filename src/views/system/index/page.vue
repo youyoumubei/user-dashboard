@@ -1,153 +1,119 @@
 <template>
   <d2-container class="page">
     <template slot="header">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="审批人">
-          <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+      Ticket Booking
+    </template>
+    <d2-crud
+      ref="d2Crud"
+      :columns="columns"
+      :options="options"
+      :data="data">
+      <el-form slot="header" :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="Starting Place:" prop="topic">
+          <el-select v-model="formInline.topic">
+            <el-option label="搞笑" value="funny"></el-option>
+            <el-option label="日常" value="daily"></el-option>
+            <el-option label="运动" value="sports"></el-option>
+            <el-option label="汽车" value="automobile"></el-option>
+            <el-option label="美食圈" value="food"></el-option>
+            <el-option label="动物圈" value="animal"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="活动区域">
-          <el-select v-model="formInline.region" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="Terminal Place:" prop="sortBy">
+          <el-select v-model="formInline.sortBy">
+            <el-option label="弹幕数" value="dm"></el-option>
+            <el-option label="评论数" value="scores"></el-option>
+            <el-option label="播放数" value="click"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Date:">
+          <el-date-picker type="date" v-model="formInline.date1" style="width: 100%;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="Train Type:" prop="sortBy">
+          <el-select v-model="formInline.sortBy">
+            <el-option label="弹幕数" value="dm"></el-option>
+            <el-option label="评论数" value="scores"></el-option>
+            <el-option label="播放数" value="click"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="onSubmit">
+            <d2-icon name="search"/>
+            Search
+          </el-button>
         </el-form-item>
       </el-form>
-    </template>
-    <ve-wordcloud :data="chartData"></ve-wordcloud>
+    </d2-crud>
   </d2-container>
 </template>
 
 <script>
-
 export default {
   components: {},
   data () {
     return {
-      chartData: {
-        columns: ['word', 'count'],
-        rows: this.getRows()
-      },
       formInline: {
-        user: '',
-        region: ''
-      }
+        topic: '',
+        sortBy: '',
+        date1: '',
+        date2: ''
+      },
+      options: {
+        'emptyText': 'No Data'
+      },
+      columns: [
+        {
+          title: 'No.',
+          key: 'date'
+        },
+        {
+          title: 'Trip Id',
+          key: 'name'
+        },
+        {
+          title: 'Train Type Id',
+          key: 'address'
+        },
+        {
+          title: 'From',
+          key: 'address'
+        },
+        {
+          title: 'To',
+          key: 'address'
+        },
+        {
+          title: 'Starting Time',
+          key: 'address',
+          width: '100'
+        },
+        {
+          title: 'End Time',
+          key: 'address'
+        },
+        {
+          title: '2rd Class Seat Number',
+          key: 'address',
+          width: '160'
+        },
+        {
+          title: '3rd Class Seat Number',
+          key: 'address',
+          width: '160'
+        },
+        {
+          title: 'Select Seat',
+          key: 'address'
+        },
+        {
+          title: 'Operation',
+          key: 'address'
+        }
+      ],
+      data: []
     }
   },
   methods: {
-    onSubmit () {
-      console.log('submit!')
-    },
-    getRows () {
-      return [{
-        'word': 'visualMap',
-        'count': 22199
-      }, {
-        'word': 'continuous',
-        'count': 10288
-      }, {
-        'word': 'contoller',
-        'count': 620
-      }, {
-        'word': 'series',
-        'count': 274470
-      }, {
-        'word': 'gauge',
-        'count': 12311
-      }, {
-        'word': 'detail',
-        'count': 1206
-      }, {
-        'word': 'piecewise',
-        'count': 4885
-      }, {
-        'word': 'textStyle',
-        'count': 32294
-      }, {
-        'word': 'markPoint',
-        'count': 18574
-      }, {
-        'word': 'pie',
-        'count': 38929
-      }, {
-        'word': 'roseType',
-        'count': 969
-      }, {
-        'word': 'label',
-        'count': 37517
-      }, {
-        'word': 'emphasis',
-        'count': 12053
-      }, {
-        'word': 'yAxis',
-        'count': 57299
-      }, {
-        'word': 'name',
-        'count': 15418
-      }, {
-        'word': 'type',
-        'count': 22905
-      }, {
-        'word': 'gridIndex',
-        'count': 5146
-      }, {
-        'word': 'normal',
-        'count': 49487
-      }, {
-        'word': 'itemStyle',
-        'count': 33837
-      }, {
-        'word': 'min',
-        'count': 4500
-      }, {
-        'word': 'silent',
-        'count': 5744
-      }, {
-        'word': 'animation',
-        'count': 4840
-      }, {
-        'word': 'offsetCenter',
-        'count': 232
-      }, {
-        'word': 'inverse',
-        'count': 3706
-      }, {
-        'word': 'borderColor',
-        'count': 4812
-      }, {
-        'word': 'markLine',
-        'count': 16578
-      }, {
-        'word': 'line',
-        'count': 76970
-      }, {
-        'word': 'radiusAxis',
-        'count': 6704
-      }, {
-        'word': 'radar',
-        'count': 15964
-      }, {
-        'word': 'data',
-        'count': 60679
-      }, {
-        'word': 'dataZoom',
-        'count': 24347
-      }, {
-        'word': 'tooltip',
-        'count': 43420
-      }, {
-        'word': 'toolbox',
-        'count': 25222
-      }, {
-        'word': 'geo',
-        'count': 16904
-      }, {
-        'word': 'parallelAxis',
-        'count': 4029
-      }]
-    }
   }
 }
 </script>
@@ -172,5 +138,8 @@ export default {
       }
     }
   }
+}
+.line {
+  text-align: center;
 }
 </style>
