@@ -16,7 +16,7 @@
         flex="dir:top main:justify cross:stretch box:justify">
         <div class="page-login--content-header">
           <p class="page-login--content-header-motto">
-            时间是一切财富中最宝贵的财富
+            Welcome to TrainTicket
           </p>
         </div>
         <div
@@ -68,16 +68,6 @@
                 </el-button>
               </el-form>
             </el-card>
-            <p
-              class="page-login--options"
-              flex="main:justify cross:center">
-              <span><d2-icon name="question-circle"/> 忘记密码</span>
-              <span>注册用户</span>
-            </p>
-            <!-- quick login -->
-            <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
-              快速选择用户（测试功能）
-            </el-button>
           </div>
         </div>
         <div class="page-login--content-footer">
