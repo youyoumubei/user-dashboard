@@ -1,109 +1,220 @@
 <template>
   <d2-container class="page">
-    <template slot="header">
-      Ticket Booking
-    </template>
-    <d2-crud
-      ref="d2Crud"
-      :columns="columns"
-      :options="options"
-      :data="data">
-      <el-form slot="header" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="Starting Place:" prop="topic">
-          <el-select v-model="formInline.topic">
-            <el-option label="搞笑" value="funny"></el-option>
-            <el-option label="日常" value="daily"></el-option>
-            <el-option label="运动" value="sports"></el-option>
-            <el-option label="汽车" value="automobile"></el-option>
-            <el-option label="美食圈" value="food"></el-option>
-            <el-option label="动物圈" value="animal"></el-option>
+    <template slot="header">Ticket Booking</template>
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form-item label="Starting Place:" prop="from">
+        <el-input v-model="formInline.from"></el-input>
+      </el-form-item>
+      <el-form-item label="Terminal Place:" prop="to">
+        <el-input v-model="formInline.to"></el-input>
+      </el-form-item>
+      <el-form-item label="Date:">
+        <el-date-picker type="date" v-model="formInline.selectedDate" value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="Train Type:" prop="selectedTrainType">
+        <el-select v-model="formInline.selectedTrainType">
+          <el-option label="All" :value="0"></el-option>
+          <el-option label="GaoTie DongChe" :value="1"></el-option>
+          <el-option label="Other" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary">
+          <d2-icon name="search" />Search
+        </el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-table
+    :data="travelList"
+    empty-text='No Data'
+    style="width: 100%">
+      <el-table-column
+        type="index"
+        label="No.">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="Trip Id">
+        <template slot-scope="scope">
+          <span>{{ scope.row.tripId.type + scope.row.tripId.number }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="trainTypeId"
+        label="Train Type Id"
+        width="100">
+      </el-table-column>
+      <el-table-column
+        prop="startingStation"
+        label="From">
+      </el-table-column>
+      <el-table-column
+        prop="terminalStation"
+        label="To">
+      </el-table-column>
+      <el-table-column
+        prop="startingTime"
+        label="Starting Time"
+        width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.startingTime | formatTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="endTime"
+        label="End Time"
+        width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.endTime | formatTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="economyClass"
+        label="2rd Class Seat Number"
+        width="160">
+      </el-table-column>
+      <el-table-column
+        prop="confortClass"
+        label="1st Class Seat Number"
+        width="160">
+      </el-table-column>
+      <el-table-column
+        prop=""
+        label="Select Seat"
+        width="120">
+        <template slot-scope="scope">
+          <el-select v-model="seatPrice">
+            <el-option key="1st" :label="'1st-' + scope.row.priceForConfortClass" :value="scope.row.priceForConfortClass"></el-option>
+            <el-option key="2st" :label="'2st-' + scope.row.priceForEconomyClass" :value="scope.row.priceForEconomyClass"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="Terminal Place:" prop="sortBy">
-          <el-select v-model="formInline.sortBy">
-            <el-option label="弹幕数" value="dm"></el-option>
-            <el-option label="评论数" value="scores"></el-option>
-            <el-option label="播放数" value="click"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Date:">
-          <el-date-picker type="date" v-model="formInline.date1" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="Train Type:" prop="sortBy">
-          <el-select v-model="formInline.sortBy">
-            <el-option label="弹幕数" value="dm"></el-option>
-            <el-option label="评论数" value="scores"></el-option>
-            <el-option label="播放数" value="click"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">
-            <d2-icon name="search"/>
-            Search
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </d2-crud>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="Operation"
+        width="100">
+        <template slot-scope="scope">
+          <el-button @click="preserverBooking(scope.row)" type="primary" size="small">Booking</el-button>
+        </template>
+      </el-table-column>
+  </el-table>
   </d2-container>
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
   components: {},
   data () {
     return {
+      travelList: [
+        {
+          'tripId': {
+            'type': 'D',
+            'number': '1345'
+          },
+          'trainTypeId': 'DongCheOne',
+          'startingStation': 'Shang Hai',
+          'terminalStation': 'Su Zhou',
+          'startingTime': 1367622000000,
+          'endTime': 1367622960000,
+          'economyClass': 1073741823,
+          'confortClass': 1073741823,
+          'priceForEconomyClass': '22.5',
+          'priceForConfortClass': '50.0'
+        }
+      ],
+      tempTravelList: [],
+      selectedSeats: [],
+      email: 'fdse_microservice@163.com',
+      password: '111111',
+      verifyCode: '1234',
       formInline: {
-        topic: '',
-        sortBy: '',
-        date1: '',
-        date2: ''
+        from: 'Shang Hai',
+        to: 'Su Zhou',
+        selectedDate: '',
+        selectedTrainType: 1,
+        trainTypes: [
+          { text: 'All', value: 0 },
+          { text: 'GaoTie DongChe', value: 1 },
+          { text: 'Other', value: 2 }
+        ]
       },
+      seatPrice: null,
       options: {
-        'emptyText': 'No Data'
+        emptyText: 'No Data'
       },
       columns: [
         {
           title: 'No.',
-          key: 'date'
+          key: ''
         },
         {
           title: 'Trip Id',
-          key: 'name'
+          key: 'tripId',
+          component: {
+            render (h, param) {
+              return <span>{param.tripId.type + param.tripId.number}</span>
+            }
+          }
         },
         {
           title: 'Train Type Id',
-          key: 'address'
-        },
-        {
-          title: 'From',
-          key: 'address'
-        },
-        {
-          title: 'To',
-          key: 'address'
-        },
-        {
-          title: 'Starting Time',
-          key: 'address',
+          key: 'trainTypeId',
           width: '100'
         },
         {
+          title: 'From',
+          key: 'startingStation'
+        },
+        {
+          title: 'To',
+          key: 'terminalStation'
+        },
+        {
+          title: 'Starting Time',
+          key: 'startingTime',
+          width: '100',
+          component: {
+            render (h, param) {
+              return <span>{dayjs(param.startingTime).format('HH:mm')}</span>
+            }
+          }
+        },
+        {
           title: 'End Time',
-          key: 'address'
+          key: 'endTime',
+          width: '100',
+          component: {
+            render (h, param) {
+              return <span>{dayjs(param.endTime).format('HH:mm')}</span>
+            }
+          }
         },
         {
           title: '2rd Class Seat Number',
-          key: 'address',
+          key: 'economyClass',
           width: '160'
         },
         {
           title: '3rd Class Seat Number',
-          key: 'address',
+          key: 'confortClass',
           width: '160'
         },
         {
           title: 'Select Seat',
-          key: 'address'
+          key: 'address',
+          component: {
+            render (h, param) {
+              const confortPrice = param.priceForConfortClass
+              const EconomyPrice = param.priceForEconomyClass
+              return <el-select>
+                <el-option key={confortPrice} label={'1st-' + confortPrice} value={confortPrice}></el-option>
+                <el-option key={EconomyPrice} label={'2st-' + EconomyPrice} value={EconomyPrice}></el-option>
+              </el-select>
+            }
+          }
         },
         {
           title: 'Operation',
@@ -114,11 +225,272 @@ export default {
     }
   },
   methods: {
+    initPage () {
+      this.setTodayDatePreserve()
+      this.checkLogin()
+    },
+    setTodayDatePreserve () {
+      this.formInline.selectedDate = dayjs().format('YYYY-MM-DD')
+    },
+    checkLogin () {
+      var username = sessionStorage.getItem('client_name')
+      if (username == null) {
+        // alert('Please login first!')
+      } else {
+        document.getElementById('client_name').innerHTML = username
+      }
+    },
+    logOutClient () {
+      var logoutInfo = new Object()
+      logoutInfo.id = this.getCookie('loginId')
+      if (logoutInfo.id == null || logoutInfo.id == '') {
+        alert('No cookie named `loginId` exist. please login')
+        location.href = 'client_login.html'
+        return
+      }
+      logoutInfo.token = this.getCookie('loginToken')
+      if (logoutInfo.token == null || logoutInfo.token == '') {
+        // alert('No cookie named 'loginToken' exist.  please login')
+        location.href = 'client_login.html'
+        return
+      }
+      var data = JSON.stringify(logoutInfo)
+      var that = this
+      $.ajax({
+        type: 'post',
+        url: '/logout',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: data,
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function (result) {
+          if (result['status'] == true) {
+            that.setCookie('loginId', '', -1)
+            that.setCookie('loginToken', '', -1)
+          } else if (result['message'] == 'Not Login') {
+            that.setCookie('loginId', '', -1)
+            that.setCookie('loginToken', '', -1)
+          }
+          sessionStorage.setItem('client_id', '-1')
+          sessionStorage.setItem('client_name', 'Not Login')
+          document.getElementById('client_name').innerHTML = 'Not Login'
+          location.href = 'client_login.html'
+        },
+        error: function(e) {
+          alert('logout error')
+        }
+      })
+    },
+    initSeatClass(size) {
+      this.selectedSeats = new Array(size)
+      for (var i = 0; i < size; i++) this.selectedSeats[i] = 2
+    },
+    searchTravel() {
+      var travelQueryInfo = new Object()
+      travelQueryInfo.startingPlace = this.from
+      travelQueryInfo.endPlace = this.to
+      travelQueryInfo.departureTime = this.selectedDate
+      if (
+        travelQueryInfo.departureTime == null ||
+        this.checkDateFormat(travelQueryInfo.departureTime) == false
+      ) {
+        alert('Departure Date Format Wrong.')
+        return
+      }
+      var travelQueryData = JSON.stringify(travelQueryInfo)
+      var train_type = this.selectedTrainType
+      this.tempTravelList = []
+      this.travelList = []
+
+      if (train_type == 0) {
+        this.queryForTravelInfo(
+          travelQueryData,
+          '/api/v1/travelservice/trips/left'
+        )
+        this.queryForTravelInfo(
+          travelQueryData,
+          '/api/v1/travel2service/trips/left'
+        )
+      } else if (train_type == 1) {
+        this.queryForTravelInfo(
+          travelQueryData,
+          '/api/v1/travelservice/trips/left'
+        )
+      } else if (train_type == 2) {
+        this.queryForTravelInfo(
+          travelQueryData,
+          '/api/v1/travel2service/trips/left'
+        )
+      }
+    },
+    queryForTravelInfo(data, path) {
+      $('#travel_booking_button').attr('disabled', true)
+      var that = this
+      $('#my-svg').shCircleLoader({ namespace: 'runLoad' })
+      $.ajax({
+        type: 'post',
+        url: path,
+        contentType: 'application/json',
+        dataType: 'json',
+        data: data,
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function(result) {
+          if (result.status == 1) {
+            var obj = result.data
+            var size = obj.length
+            that.tempTravelList = obj
+            that.initSeatClass(size)
+            for (var i = 0; i < size; i++) {
+              that.tempTravelList[
+                i
+              ].startingTime = that.convertNumberToTimeString(
+                obj[i].startingTime
+              )
+              that.tempTravelList[i].endTime = that.convertNumberToTimeString(
+                obj[i].endTime
+              )
+            }
+            that.travelList = that.travelList.concat(that.tempTravelList)
+          }
+        },
+        complete: function() {
+          $('#my-svg').shCircleLoader('destroy')
+          $('#travel_booking_button').attr('disabled', false)
+        }
+      })
+    },
+    preserverBooking (row) {
+      console.log(row, this.seatPrice)
+      // var tripId = tripType + tripNum
+      // var seatPrice = '0.0'
+      // if (this.selectedSeats[index] == 2)
+      //   seatPrice = this.travelList[index].priceForConfortClass
+      // else if (this.selectedSeats[index] == 3) {
+      //   seatPrice = this.travelList[index].priceForEconomyClass
+      // }
+      // var that = this
+      // location.href =
+      //   'client_ticket_book.html?tripId=' +
+      //   tripId +
+      //   '&from=' +
+      //   from +
+      //   '&to=' +
+      //   to +
+      //   '&seatType=' +
+      //   this.selectedSeats[index] +
+      //   '&seat_price=' +
+      //   seatPrice +
+      //   '&date=' +
+      //   this.selectedDate
+    },
+    checkDateFormat(date) {
+      var dateFormat = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/
+      if (!dateFormat.test(date)) {
+        return false
+      } else {
+        return true
+      }
+    },
+    convertNumberToTimeString(timeNumber) {
+      var str = new Date(timeNumber)
+      var newStr = str.getHours() + ':' + str.getMinutes() + ''
+      return newStr
+    },
+    login() {
+      var loginInfo = new Object()
+      loginInfo.email = this.email
+      if (loginInfo.email == null || loginInfo.email == '') {
+        alert('Email Can Not Be Empty.')
+        return
+      }
+      if (this.checkEmailFormat(loginInfo.email) == false) {
+        alert('Email Format Wrong.')
+        return
+      }
+      loginInfo.password = this.password
+      if (loginInfo.password == null || loginInfo.password == '') {
+        alert('Password Can Not Be Empty.')
+        return
+      }
+      loginInfo.verificationCode = this.verifyCode
+      if (
+        loginInfo.verificationCode == null ||
+        loginInfo.verificationCode == ''
+      ) {
+        alert('Verification Code Can Not Be Empty.')
+        return
+      }
+      var data = JSON.stringify(loginInfo)
+      $.ajax({
+        type: 'post',
+        url: '/login',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: data,
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function(result) {
+          var obj = result
+          if (obj['status'] == true) {
+            sessionStorage.setItem('client_id', obj['account'].id)
+            sessionStorage.setItem('client_name', obj['account'].name)
+            document.cookie = 'loginId=' + obj['account'].id
+            document.cookie = 'loginToken=' + obj['token']
+            document.getElementById('client_name').innerHTML =
+              obj['account'].name
+            //  alert(obj['message'] + obj['account'].name + '======-')
+            // login in success
+          } else {
+            setCookie('loginId', '', -1)
+            setCookie('loginToken', '', -1)
+            sessionStorage.setItem('client_id', '-1')
+            sessionStorage.setItem('client_name', 'Not Login')
+            document.getElementById('client_name').innerHTML = 'Not Login'
+          }
+        }
+      })
+    },
+    checkEmailFormat(email) {
+      var emailFormat = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/
+      if (!emailFormat.test(email)) {
+        return false
+      } else {
+        return true
+      }
+    },
+    getCookie(cname) {
+      var name = cname + '='
+      var ca = document.cookie.split('')
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i].trim()
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length)
+      }
+      return ''
+    },
+    setCookie(cname, cvalue, exdays) {
+      var d = new Date()
+      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000)
+      var expires = 'expires=' + d.toUTCString()
+      document.cookie = cname + '=' + cvalue + ' ' + expires
+    }
+  },
+  mounted () {
+    this.initPage()
+  },
+  filters: {
+    formatTime (timeStamp) {
+      return dayjs(timeStamp).format('HH:mm')
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .page {
   .logo {
     width: 120px;
