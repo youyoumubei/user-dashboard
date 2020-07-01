@@ -1,7 +1,7 @@
 <template>
   <d2-container>
     <template slot="header">Ticket Booking</template>
-    <el-form :inline="true" ref="searchForm" :model="searchForm" :rules="rules" class="demo-form-inline">
+    <el-form :inline="true" ref="searchForm" :model="searchForm" :rules="rules">
       <el-form-item label="Starting Place:" prop="startingPlace">
         <el-input v-model="searchForm.startingPlace" clearable></el-input>
       </el-form-item>
