@@ -29,3 +29,17 @@ export function Travel2ServiceTripsLeft (params) {
     data: params
   })
 }
+
+/**
+ * @description query Other left tickets info
+ * @param {String} clientId
+ * @param {String} clientToken
+ */
+export function QueryBookingContacts (params) {
+  var url = '/api/v1/contactservice/contacts/account'
+  return request({
+    url: url,
+    method: 'get',
+    data: params
+  })
+}

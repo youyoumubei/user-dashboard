@@ -1,7 +1,7 @@
 <template>
   <d2-container>
     <template slot="header">Ticket Booking</template>
-    <el-form :inline="true" :model="searchForm" :rules="rules" class="demo-form-inline">
+    <el-form :inline="true" ref="searchForm" :model="searchForm" :rules="rules" class="demo-form-inline">
       <el-form-item label="Starting Place:" prop="startingPlace">
         <el-input v-model="searchForm.startingPlace" clearable></el-input>
       </el-form-item>
@@ -32,9 +32,9 @@
     </el-form>
 
     <el-table
-    :data="travelList"
-    empty-text='No Data'
-    style="width: 100%">
+      :data="travelList"
+      empty-text='No Data'
+      style="width: 100%">
       <el-table-column
         type="index"
         label="No.">
@@ -104,7 +104,7 @@
           <el-button @click="preserverBooking(scope.row)" type="primary" size="small">Booking</el-button>
         </template>
       </el-table-column>
-  </el-table>
+    </el-table>
   </d2-container>
 </template>
 
