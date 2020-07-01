@@ -23,13 +23,13 @@ const frameIn = [
       },
       // 演示页面
       {
-        path: 'page1',
-        name: 'page1',
+        path: 'ClientTicketBook',
+        name: 'ClientTicketBook',
         meta: {
-          title: '页面 1',
+          title: 'ClientTicketBook',
           auth: true
         },
-        component: _import('demo/page1')
+        component: _import('clients/ticketBook')
       },
       {
         path: 'page2',

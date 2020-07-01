@@ -176,7 +176,7 @@ export default {
       }
     },
     logOutClient () {
-      var logoutInfo = new Object()
+      var logoutInfo
       logoutInfo.id = this.getCookie('loginId')
       if (logoutInfo.id == null || logoutInfo.id == '') {
         alert('No cookie named `loginId` exist. please login')
@@ -201,10 +201,10 @@ export default {
           withCredentials: true
         },
         success: function (result) {
-          if (result['status'] == true) {
+          if (result['status'] === true) {
             that.setCookie('loginId', '', -1)
             that.setCookie('loginToken', '', -1)
-          } else if (result['message'] == 'Not Login') {
+          } else if (result['message'] === 'Not Login') {
             that.setCookie('loginId', '', -1)
             that.setCookie('loginToken', '', -1)
           }
@@ -213,14 +213,10 @@ export default {
           document.getElementById('client_name').innerHTML = 'Not Login'
           location.href = 'client_login.html'
         },
-        error: function(e) {
+        error: function (e) {
           alert('logout error')
         }
       })
-    },
-    initSeatClass (size) {
-      this.selectedSeats = new Array(size)
-      for (var i = 0; i < size; i++) this.selectedSeats[i] = 2
     },
     searchTravel () {
       this.$refs['searchForm'].validate((valid) => {
@@ -231,22 +227,22 @@ export default {
           this.travelList = []
 
           if (trainType === 0) {
-            this.TravelServiceTripsLeft(travelQueryData)
+            TravelServiceTripsLeft(travelQueryData)
               .then(res => {
                 console.log(res)
               })
 
-            this.Travel2ServiceTripsLeft(travelQueryData)
+            Travel2ServiceTripsLeft(travelQueryData)
               .then(res => {
                 console.log(res)
               })
           } else if (trainType === 1) {
-            this.TravelServiceTripsLeft(travelQueryData)
+            TravelServiceTripsLeft(travelQueryData)
               .then(res => {
                 console.log(res)
               })
           } else if (trainType === 2) {
-            this.Travel2ServiceTripsLeft(travelQueryData)
+            Travel2ServiceTripsLeft(travelQueryData)
               .then(res => {
                 console.log(res)
               })
@@ -257,30 +253,24 @@ export default {
       })
     },
     preserverBooking (row) {
-      console.log(row, this.seatPrice)
-      var tripId = row.tripId.type + row.tripId.number
-      var seatPrice = this.seatPrice.label
-      var seatType = this.seatPrice.value
-      var from = row.startingStation
-      var to = row.terminalStation
-      var date = this.searchForm.departureTime
-      this.$router.push({ path: '/designForm/' })
-      // location.href =
-      //   'client_ticket_book.html?tripId=' +
-      //   tripId +
-      //   '&from=' +
-      //   from +
-      //   '&to=' +
-      //   to +
-      //   '&seatType=' +
-      //   this.selectedSeats[index] +
-      //   '&seat_price=' +
-      //   seatPrice +
-      //   '&date=' +
-      //   this.selectedDate
+      if (!this.seatPrice) {
+        this.$message.warning('Please select seat')
+        return false
+      }
+      this.$router.push({
+        name: 'ClientTicketBook',
+        params: {
+          tripId: row.tripId.type + row.tripId.number,
+          from: row.startingStation,
+          to: row.terminalStation,
+          seatType: this.seatPrice.value,
+          seatPrice: this.seatPrice.label,
+          date: this.searchForm.departureTime
+        }
+      })
     },
     login () {
-      var loginInfo = new Object()
+      var loginInfo
       loginInfo.email = this.email
       if (loginInfo.email == null || loginInfo.email == '') {
         alert('Email Can Not Be Empty.')
@@ -313,7 +303,7 @@ export default {
         xhrFields: {
           withCredentials: true
         },
-        success: function(result) {
+        success: function (result) {
           var obj = result
           if (obj['status'] == true) {
             sessionStorage.setItem('client_id', obj['account'].id)
@@ -347,11 +337,11 @@ export default {
       var ca = document.cookie.split('')
       for (var i = 0; i < ca.length; i++) {
         var c = ca[i].trim()
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length)
+        if (c.indexOf(name) === 0) return c.substring(name.length, c.length)
       }
       return ''
     },
-    setCookie(cname, cvalue, exdays) {
+    setCookie (cname, cvalue, exdays) {
       var d = new Date()
       d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000)
       var expires = 'expires=' + d.toUTCString()

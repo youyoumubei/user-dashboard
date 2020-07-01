@@ -95,19 +95,6 @@
         </div>
       </div>
     </div>
-    <el-dialog
-      title="快速选择用户"
-      :visible.sync="dialogVisible"
-      width="400px">
-      <el-row :gutter="10" style="margin: -20px 0px -10px 0px;">
-        <el-col v-for="(user, index) in users" :key="index" :span="8">
-          <div class="page-login--quick-user" @click="handleUserBtnClick(user)">
-            <d2-icon name="user-circle-o"/>
-            <span>{{user.name}}</span>
-          </div>
-        </el-col>
-      </el-row>
-    </el-dialog>
   </div>
 </template>
 
@@ -123,8 +110,6 @@ export default {
     return {
       timeInterval: null,
       time: dayjs().format('HH:mm:ss'),
-      // 快速选择用户
-      dialogVisible: false,
       users: [
         {
           name: 'Admin',
