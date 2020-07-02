@@ -43,3 +43,33 @@ export function QueryBookingContacts (params) {
     data: params
   })
 }
+
+/**
+ * @description 查询保险类型
+ * @param {String} clientToken
+ */
+export function GetAssuranceType (params) {
+  var url = '/api/v1/assuranceservice/assurances/types'
+  return request({
+    url: url,
+    method: 'get',
+    data: params
+  })
+}
+
+/**
+ * @description 查询餐食信息
+ * @param {String} date
+ * @param {String} startStation
+ * @param {String} endStation
+ * @param {String} tripId
+ * @param {String} clientToken
+ */
+export function GetFoodInfo (params) {
+  var url = '/api/v1/foodservice/foods/2020-07-02/Shang%20Hai/Su%20Zhou/D1345'
+  return request({
+    url: url,
+    method: 'get',
+    data: params
+  })
+}
