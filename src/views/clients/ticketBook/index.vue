@@ -96,7 +96,7 @@
           <b>Ticket Info</b>
         </div>
         <el-steps :active="step" finish-status="success">
-          <el-step title="Select Contacts"></el-step>
+          <el-step title="Select Contacts" :description="selectedContact.name"></el-step>
           <el-step title="Food and Assurance"></el-step>
           <el-step title="Cosign"></el-step>
         </el-steps>
@@ -151,24 +151,24 @@
           </el-table>
         </div>
         <div v-show="step === 1">
-          <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="Assurance" prop="name">
-              <el-radio-group v-model="ruleForm.assurance">
+          <el-form :model="serviceForm" ref="serviceForm" label-width="100px">
+            <el-form-item label="Assurance" prop="assurance">
+              <el-radio-group v-model="serviceForm.assurance">
                 <el-radio :label="0">No Assurance</el-radio>
                 <el-radio v-for="item in assuranceList" :key="item.index" :label="item.index">{{ item.name + " " + item.price}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="Need Food" prop="needFood">
-              <el-switch v-model="ruleForm.needFood"></el-switch>
+              <el-switch v-model="serviceForm.needFood"></el-switch>
             </el-form-item>
-            <el-form-item label="Food Type" prop="foodType" v-show="ruleForm.needFood === true">
-              <el-select v-model="ruleForm.foodType">
+            <el-form-item label="Food Type" prop="foodType" v-show="serviceForm.needFood === true">
+              <el-select v-model="serviceForm.foodType" style="width: 350px;">
                 <el-option label="Train Food" :value="1"></el-option>
                 <el-option label="Station Food Stores" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Train Food" prop="trainFood" v-show="ruleForm.needFood === true && ruleForm.foodType === 1">
-              <el-select v-model="ruleForm.trainFood" value-key="foodName">
+            <el-form-item label="Train Food" prop="trainFood" v-show="serviceForm.needFood === true && serviceForm.foodType === 1">
+              <el-select v-model="serviceForm.trainFood" value-key="foodName" style="width: 350px;">
                 <el-option v-for="(item, index) in trainFoodList"
                   :key="index"
                   :label="item.foodName + ':$' + item.price"
@@ -176,9 +176,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Station Food" prop="stationFood" v-show="ruleForm.needFood === true && ruleForm.foodType === 2">
+            <el-form-item label="Station Food" prop="stationFood" v-show="serviceForm.needFood === true && serviceForm.foodType === 2">
               <el-cascader
-                v-model="ruleForm.stationFood"
+                v-model="serviceForm.stationFood"
                 :options="stationFoodList"
                 style="width: 350px;">
               </el-cascader>
@@ -189,7 +189,28 @@
             </el-form-item>
           </el-form>
         </div>
-        <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+        <div v-show="step === 2">
+          <el-form :model="consignForm" class="demo-form-inline">
+            <el-form-item label="Consign">
+              <el-switch v-model="consignForm.needConsign"></el-switch>
+            </el-form-item>
+            <div v-show="consignForm.needConsign === true">
+              <el-form-item label="Consignee">
+                <el-input v-model="consignForm.consigneeName" placeholder="Consignee"></el-input>
+              </el-form-item>
+              <el-form-item label="Phone">
+                <el-input v-model="consignForm.consigneePhone" placeholder="Phone"></el-input>
+              </el-form-item>
+              <el-form-item label="Weight">
+                <el-input v-model="consignForm.consigneeWeight" placeholder="Weight"></el-input>
+              </el-form-item>
+            </div>
+            <el-form-item>
+              <el-button @click="goBack">Back</el-button>
+              <el-button type="primary" @click="preserve">Submit</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
       </el-card>
     </div>
 
@@ -221,6 +242,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import { QueryBookingContacts, GetAssuranceType, GetFoodInfo } from '@/api/api'
 export default {
   name: 'ticketBook',
@@ -234,6 +256,7 @@ export default {
       assuranceList: [],
       trainFoodList: [],
       stationFoodList: [],
+      selectedContact: {},
       contactForm: {
         name: 'Contacts_XXX',
         documentType: 1,
@@ -256,8 +279,13 @@ export default {
           { required: true, message: 'Phone Number is required', trigger: 'blur' }
         ]
       },
-      ruleForm: {
+      serviceForm: {
         assurance: 0
+      },
+      consignForm: {
+        consigneeName: '',
+        consigneePhone: '',
+        consigneeWeight: null
       }
     }
   },
@@ -285,7 +313,6 @@ export default {
           })
           this.stationFoodList.push(stationInfo)
         })
-        console.log(this.stationFoodList)
       })
   },
   methods: {
@@ -296,6 +323,7 @@ export default {
       this.step++
     },
     selectFoodAssurance (selectedRow) {
+      this.selectedContact = selectedRow
       this.step++
     },
     next () {
@@ -325,25 +353,43 @@ export default {
         }
       })
     },
-    submit () {
-      let accountId = 'client_id'
-      let contactsId = 'sub_consNum'
-      let tripId, seatType, date, from, to
-      let assurance = this.ruleForm.assurance
-      if ($('#sub_foodType').text().indexOf("Train")) {
-          orderTicketInfo.foodType = 1;
-          orderTicketInfo.foodName = $('#sub_foodName').text();
-          orderTicketInfo.foodPrice = parseFloat($('#sub_foodPrice').text().substr(1));
-          orderTicketInfo.stationName = "";
-          orderTicketInfo.storeName = "";
-      } else if ($('#sub_foodType').text().indexOf("Station")) {
-          orderTicketInfo.foodType = 2;
-          orderTicketInfo.stationName = $('#sub_foodStation').text();
-          orderTicketInfo.storeName = $('#sub_storeName').text();
-          orderTicketInfo.foodName = $('#sub_foodName').text();
-          orderTicketInfo.foodPrice = parseFloat($('#sub_foodPrice').text().substr(1));
+    preserve () {
+      let params = {
+        accountId: '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f',
+        contactsId: this.selectedContact.id,
+        hanleDate: dayjs().format('YYYY-MM-DD'),
+        assurance: this.serviceForm.assurance,
+        isWithin: false,
+        ...this.ticketInfo
+      }
+      // food info
+      if (this.serviceForm.needFood) {
+        const foodInfo = this.serviceForm
+        params.foodType = foodInfo.foodType
+        if (foodInfo.foodType === 1) {
+          params.foodName = foodInfo.trainFood.foodName
+          params.foodPrice = foodInfo.trainFood.price
+        } else if (foodInfo.foodType === 2) {
+          params.stationName = foodInfo.stationFood[0]
+          params.storeName = foodInfo.stationFood[1]
+          params.foodName = foodInfo.stationFood[2].foodName
+          params.foodPrice = foodInfo.stationFood[2].price
+        }
       } else {
-          orderTicketInfo.foodType = 0;
+        params.foodType = 0
+      }
+      // consign info
+      if (this.consignForm.needConsign) {
+        params = Object.assign({}, params, this.consignForm)
+      }
+      console.log(params)
+
+      if (this.ticketInfo.tripId.startsWith('G') || this.ticketInfo.tripId.startsWith('D')) {
+        console.log('G')
+        // path = "/api/v1/preserveservice/preserve";
+      } else {
+        // path = "/api/v1/preserveotherservice/preserveOther";
+        console.log('O')
       }
     }
   }
