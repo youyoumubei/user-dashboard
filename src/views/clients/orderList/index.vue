@@ -45,7 +45,13 @@
         label="Status">
         <template slot-scope="scope">
           <span>{{ statusExpress[scope.row.status] }}</span>
-          <el-button v-show="scope.row.status === 0" @click="showPayDialog(scope.row)">Pay</el-button>
+          <el-link
+            type="success"
+            v-show="scope.row.status === 0"
+            @click="showPayDialog(scope.row)">
+            <d2-icon name="credit-card"></d2-icon>
+            Pay
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -77,23 +83,28 @@
         label="Consign"
         width="110px">
         <template slot-scope="scope">
-          <el-button
-            v-show="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 2">
+          <el-link
+            type="primary"
+            v-show="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 2"
+            @click="consignFormVisible = true">
+            <d2-icon name="user-o"></d2-icon>
             Consign
-          </el-button>
-          <el-button
+          </el-link>
+          <el-link
             type="danger"
             disabled
             v-show="scope.row.status !== 0 && scope.row.status !== 1 && scope.row.status !== 2">
             Not operable
-          </el-button>
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column
         label="Voucher"
         width="110px">
         <template slot-scope="scope">
-          <el-button type="danger" disabled v-show="scope.row.status != 6">Not operable</el-button>
+          <el-link type="danger" disabled v-show="scope.row.status != 6">
+            Not operable
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -101,16 +112,18 @@
         label="Operation"
         width="100">
         <template slot-scope="scope">
-          <el-button
-            type="primary"
+          <el-link
             v-show="scope.row.status === 1">
+            <d2-icon name="edit"/>
             Change
-          </el-button>
-          <el-button
+          </el-link>
+          <el-link
             type="danger"
-            v-show="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 3">
+            v-show="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 3"
+            @click="cancelOrder(scope.row)">
+            <d2-icon name="trash"/>
             Cancel
-          </el-button>
+          </el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -133,26 +146,19 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="Create New Contact" width="30%" :visible.sync="contactFormVisible">
-      <el-form :model="contactForm" :rules="contactRules" ref="contactForm" :label-width="formLabelWidth" v-loading="contactFormLoading">
-        <el-form-item label="Name" prop="name">
-          <el-input v-model="contactForm.name" clearable></el-input>
+    <el-dialog title="consign order" width="30%" :visible.sync="consignFormVisible">
+      <el-form :model="consignForm" :rules="contactRules" ref="consignForm" v-loading="consignFormLoading">
+        <el-form-item label="Consignee">
+          <el-input v-model="consignForm.consigneeName" placeholder="Consignee"></el-input>
         </el-form-item>
-        <el-form-item label="Document Type" prop="documentType">
-          <el-select v-model="contactForm.documentType" placeholder="select Document Type" style="width: 100%;">
-            <el-option label="ID Card" :value="1"></el-option>
-            <el-option label="Passport" :value="2"></el-option>
-            <el-option label="Other" :value="3"></el-option>
-          </el-select>
+        <el-form-item label="Phone">
+          <el-input v-model="consignForm.consigneePhone" placeholder="Phone"></el-input>
         </el-form-item>
-        <el-form-item label="Document Number" prop="documentNumber">
-          <el-input v-model="contactForm.documentNumber" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="Phone Number" prop="phoneNumber">
-          <el-input v-model="contactForm.phoneNumber" clearable></el-input>
+        <el-form-item label="Weight">
+          <el-input v-model="consignForm.consigneeWeight" placeholder="Weight"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="contactFormVisible = false">Cancel</el-button>
+          <el-button @click="consignFormVisible = false">Cancel</el-button>
           <el-button type="primary">Save</el-button>
         </el-form-item>
       </el-form>
@@ -169,7 +175,7 @@ export default {
     return {
       step: 0,
       tblLoading: true,
-      contactFormLoading: false,
+      consignFormLoading: false,
       ticketInfo: {},
       orderList: [],
       statusExpress: ['Not Paid', 'Paid & Not Collected', 'Collected', 'Cancel & Rebook', 'Cancel', 'Refunded', 'Used', 'other'],
@@ -178,13 +184,12 @@ export default {
       trainFoodList: [],
       stationFoodList: [],
       selectedContact: {},
-      contactForm: {
-        name: 'Contacts_XXX',
-        documentType: 1,
-        documentNumber: 'DocumentNumber_XXX',
-        phoneNumber: 'ContactsPhoneNum_XXX'
+      consignForm: {
+        consigneeName: '',
+        consigneePhone: '',
+        consigneeWeight: null
       },
-      contactFormVisible: false,
+      consignFormVisible: false,
       formLabelWidth: '150px',
       contactRules: {
         name: [
@@ -228,6 +233,24 @@ export default {
     showPayDialog (row) {
       this.payForm = row
       this.payFormVisible = true
+    },
+    cancelOrder (row) {
+      let message = 'Cancel The Ticket? You will get none refund. Ticket Order Id:' + row.id
+      this.$confirm(message, 'Cancel Order', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   },
   filters: {
