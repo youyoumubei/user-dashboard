@@ -391,6 +391,24 @@ export default {
         // path = "/api/v1/preserveotherservice/preserveOther";
         console.log('O')
       }
+      // accountId: "4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"
+      // assurance: "0"
+      // consigneeName: "test1"
+      // consigneePhone: "123456789"
+      // consigneeWeight: 1
+      // contactsId: "32b6cfa5-4565-4e85-b496-673f7af138a3"
+      // date: "2020-07-03"
+      // foodName: "Bone Soup"
+      // foodPrice: 2.5
+      // foodType: 1
+      // from: "Shang Hai"
+      // handleDate: "2020-07-02"
+      // isWithin: false
+      // seatType: "2"
+      // stationName: ""
+      // storeName: ""
+      // to: "Su Zhou"
+      // tripId: "D1345"
     }
   }
 }

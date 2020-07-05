@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-dashboard
+spec:
+  selector:
+    matchLabels:
+      app: test-dashboard
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: test-dashboard
+    spec:
+      containers:
+      - name: test-dashboard
+        image: youyoumubei/ts-ui-dashboard:0.0.4
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-dashboard
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      nodePort: 33677
+  selector:
+   app: test-dashboard
+---
