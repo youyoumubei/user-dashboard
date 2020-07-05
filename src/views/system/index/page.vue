@@ -134,9 +134,6 @@ export default {
       ],
       tempTravelList: [],
       selectedSeats: [],
-      email: 'fdse_microservice@163.com',
-      password: '111111',
-      verifyCode: '1234',
       searchForm: {
         startingPlace: 'Shang Hai',
         endPlace: 'Su Zhou',

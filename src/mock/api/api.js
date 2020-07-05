@@ -6,6 +6,12 @@ const food = { 'trainFoodList': [{ 'id': '871f47df-b023-47bb-918a-d13ec37a7c05',
 
 const assurances = [{ 'index': 1, 'name': 'Traffic Accident Assurance', 'price': 3.0 }]
 
+const loginInfo = { 'userId': '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f', 'username': 'fdse_microservice', 'token': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmZHNlX21pY3Jvc2VydmljZSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpZCI6IjRkMmE0NmM3LTcxY2ItNGNmMS1iNWJiLWI2ODQwNmQ5ZGE2ZiIsImlhdCI6MTU5MzkzNzIwOSwiZXhwIjoxNTkzOTQwODA5fQ.kCjDhXIXdUUPAfXgDXPES8tIe8vCI26pffVwoETEbcw' }
+
+const orderList = [{ 'id': '5ad7750b-a68b-49c0-a8c0-32776b067703', 'boughtDate': 1593507787450, 'travelDate': 1501257600000, 'travelTime': 1367629320000, 'accountId': '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f', 'contactsName': 'Contacts_One', 'documentType': 1, 'contactsDocumentNumber': 'DocumentNumber_One', 'trainNumber': 'G1237', 'coachNumber': 5, 'seatClass': 2, 'seatNumber': 'FirstClass-30', 'from': 'Nan Jing', 'to': 'Shang Hai Hong Qiao', 'status': 0, 'price': '100.0' }, { 'id': '8177ac5a-61ac-42f4-83f4-bd7b394d0531', 'boughtDate': 1593507788367, 'travelDate': 1501257600000, 'travelTime': 1367629260000, 'accountId': '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f', 'contactsName': 'Contacts_One', 'documentType': 1, 'contactsDocumentNumber': 'DocumentNumber_One', 'trainNumber': 'G1234', 'coachNumber': 5, 'seatClass': 2, 'seatNumber': 'FirstClass-30', 'from': 'Shang Hai', 'to': 'Bei Jing', 'status': 0, 'price': '100.0' }, { 'id': 'd3c91694-d5b8-424c-9974-e14c89226e49', 'boughtDate': 1593507788452, 'travelDate': 1501257600000, 'travelTime': 1367629200000, 'accountId': '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f', 'contactsName': 'Contacts_One', 'documentType': 1, 'contactsDocumentNumber': 'DocumentNumber_One', 'trainNumber': 'G1235', 'coachNumber': 5, 'seatClass': 2, 'seatNumber': 'FirstClass-30', 'from': 'Shang Hai', 'to': 'Bei Jing', 'status': 0, 'price': '100.0' }]
+
+const otherOrderList = [{ 'id': 'c47c0aa5-7835-4833-96f0-c66f24af1b07', 'boughtDate': 1593509445959, 'travelDate': 123456799, 'travelTime': 123456799, 'accountId': '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f', 'contactsName': 'Test', 'documentType': 1, 'contactsDocumentNumber': 'Test', 'trainNumber': 'K1235', 'coachNumber': 5, 'seatClass': 2, 'seatNumber': '6A', 'from': 'Shang Hai', 'to': 'Tai Yuan', 'status': 1, 'price': '100' }]
+
 export default [
   {
     path: '/api/v1/travelservice/trips/left',
@@ -33,6 +39,20 @@ export default [
     method: 'get',
     handle ({ body }) {
       return assurances
+    }
+  },
+  {
+    path: '/api/v1/orderservice/order/refresh',
+    method: 'post',
+    handle ({ body }) {
+      return orderList
+    }
+  },
+  {
+    path: '/api/v1/orderOtherService/orderOther/refresh',
+    method: 'post',
+    handle ({ body }) {
+      return otherOrderList
     }
   }
 ]

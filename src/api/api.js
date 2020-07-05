@@ -40,7 +40,7 @@ export function QueryBookingContacts (params) {
   return request({
     url: url,
     method: 'get',
-    data: params
+    params: params
   })
 }
 
@@ -53,7 +53,7 @@ export function GetAssuranceType (params) {
   return request({
     url: url,
     method: 'get',
-    data: params
+    params: params
   })
 }
 
@@ -70,6 +70,42 @@ export function GetFoodInfo (params) {
   return request({
     url: url,
     method: 'get',
-    data: params
+    params: params
+  })
+}
+
+export function QueryMyOrderList (params) {
+  var url = '/api/v1/orderservice/order/refresh'
+  return request({
+    url: url,
+    method: 'post',
+    data: {
+      loginId: '',
+      enableStateQuery: false,
+      enableTravelDateQuery: false,
+      enableBoughtDateQuery: false,
+      travelDateStart: null,
+      travelDateEnd: null,
+      boughtDateStart: null,
+      boughtDateEnd: null
+    }
+  })
+}
+
+export function QueryMyOtherOrderList (params) {
+  var url = '/api/v1/orderOtherService/orderOther/refresh'
+  return request({
+    url: url,
+    method: 'post',
+    data: {
+      loginId: '',
+      enableStateQuery: false,
+      enableTravelDateQuery: false,
+      enableBoughtDateQuery: false,
+      travelDateStart: null,
+      travelDateEnd: null,
+      boughtDateStart: null,
+      boughtDateEnd: null
+    }
   })
 }

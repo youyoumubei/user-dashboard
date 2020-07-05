@@ -21,7 +21,6 @@ const frameIn = [
         },
         component: _import('system/index')
       },
-      // 演示页面
       {
         path: 'ClientTicketBook',
         name: 'ClientTicketBook',
@@ -32,22 +31,13 @@ const frameIn = [
         component: _import('clients/ticketBook')
       },
       {
-        path: 'page2',
-        name: 'page2',
+        path: 'OrderList',
+        name: 'OrderList',
         meta: {
-          title: '页面 2',
+          title: 'OrderList',
           auth: true
         },
-        component: _import('demo/page2')
-      },
-      {
-        path: 'page3',
-        name: 'page3',
-        meta: {
-          title: '页面 3',
-          auth: true
-        },
-        component: _import('demo/page3')
+        component: _import('clients/orderList')
       },
       // 系统 前端日志
       {
