@@ -12,6 +12,8 @@ const orderList = [{ 'id': '5ad7750b-a68b-49c0-a8c0-32776b067703', 'boughtDate':
 
 const otherOrderList = [{ 'id': 'c47c0aa5-7835-4833-96f0-c66f24af1b07', 'boughtDate': 1593509445959, 'travelDate': 123456799, 'travelTime': 123456799, 'accountId': '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f', 'contactsName': 'Test', 'documentType': 1, 'contactsDocumentNumber': 'Test', 'trainNumber': 'K1235', 'coachNumber': 5, 'seatClass': 2, 'seatNumber': '6A', 'from': 'Shang Hai', 'to': 'Tai Yuan', 'status': 1, 'price': '100' }]
 
+const consignList = []
+
 export default [
   {
     path: '/api/v1/travelservice/trips/left',
@@ -53,6 +55,13 @@ export default [
     method: 'post',
     handle ({ body }) {
       return otherOrderList
+    }
+  },
+  {
+    path: '/api/v1/consignservice/consigns/account/',
+    method: 'get',
+    handle ({ body }) {
+      return consignList
     }
   }
 ]

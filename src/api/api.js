@@ -109,3 +109,12 @@ export function QueryMyOtherOrderList (params) {
     }
   })
 }
+
+export function QueryMyConsign (params) {
+  var url = '/api/v1/consignservice/consigns/account/'
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  })
+}

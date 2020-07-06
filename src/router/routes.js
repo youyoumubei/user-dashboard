@@ -39,6 +39,33 @@ const frameIn = [
         },
         component: _import('clients/orderList')
       },
+      {
+        path: 'ConsignList',
+        name: 'ConsignList',
+        meta: {
+          title: 'ConsignList',
+          auth: true
+        },
+        component: _import('clients/consignList')
+      },
+      {
+        path: 'TicketCollect',
+        name: 'TicketCollect',
+        meta: {
+          title: 'TicketCollect',
+          auth: true
+        },
+        component: _import('clients/ticketCollect')
+      },
+      {
+        path: 'EnterStation',
+        name: 'EnterStation',
+        meta: {
+          title: 'EnterStation',
+          auth: true
+        },
+        component: _import('clients/enterStation')
+      },
       // 系统 前端日志
       {
         path: 'log',
