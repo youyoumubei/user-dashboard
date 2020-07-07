@@ -168,3 +168,75 @@ export function AdSearch (params) {
     data: params
   })
 }
+
+/**
+ * @description 通过订单号查询consign
+ * @param {String} orderId
+ * @param {String} clientToken
+ */
+export function QueryConsignByOrderId (params) {
+  var url = '/api/v1/consignservice/consigns/order/'
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * @description ''
+ * @param {String} orderId
+ * @param {String} clientToken
+ */
+export function ConfirmConsign (params) {
+  var url = '/api/v1/consignservice/consigns'
+  return request({
+    url: url,
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * @description 查询退票返还金额
+ * @param {String} orderId
+ * @param {String} clientToken
+ */
+export function QueryCancelRefound (params) {
+  var url = '/api/v1/cancelservice/cancel/refound/'
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * @description 取消订单
+ * @param {String} orderId
+ * @param {String} clientToken
+ */
+export function CancelOrder (params) {
+  // "/api/v1/cancelservice/cancel/" + orderId + "/" + sessionStorage.getItem("client_id")
+  var url = '/api/v1/cancelservice/cancel/'
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * @description 取消订单
+ * @param {String} orderId
+ * @param {String} clientToken
+ * @param {Int}    type
+ */
+export function PrintVancher (params) {
+  var url = '/getVoucher'
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  })
+}

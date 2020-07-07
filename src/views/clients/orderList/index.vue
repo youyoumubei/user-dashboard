@@ -86,7 +86,7 @@
           <el-link
             type="primary"
             v-show="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 2"
-            @click="consignFormVisible = true">
+            @click="showConsignDialog(scope.row)">
             <d2-icon name="user-o"></d2-icon>
             Consign
           </el-link>
@@ -147,15 +147,15 @@
     </el-dialog>
 
     <el-dialog title="consign order" width="30%" :visible.sync="consignFormVisible">
-      <el-form :model="consignForm" :rules="contactRules" ref="consignForm" v-loading="consignFormLoading">
+      <el-form :model="consignForm" :rules="consignRules" ref="consignForm" v-loading="consignFormLoading">
         <el-form-item label="Consignee">
-          <el-input v-model="consignForm.consigneeName" placeholder="Consignee"></el-input>
+          <el-input v-model="consignForm.consignee" placeholder="consignee"></el-input>
         </el-form-item>
         <el-form-item label="Phone">
-          <el-input v-model="consignForm.consigneePhone" placeholder="Phone"></el-input>
+          <el-input v-model="consignForm.phone" placeholder="phone"></el-input>
         </el-form-item>
         <el-form-item label="Weight">
-          <el-input v-model="consignForm.consigneeWeight" placeholder="Weight"></el-input>
+          <el-input v-model="consignForm.weight" placeholder="weight"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="consignFormVisible = false">Cancel</el-button>
@@ -168,7 +168,14 @@
 
 <script>
 import dayjs from 'dayjs'
-import { QueryMyOrderList, QueryMyOtherOrderList } from '@/api/api'
+import {
+  QueryMyOrderList,
+  QueryMyOtherOrderList,
+  QueryConsignByOrderId,
+  ConfirmConsign,
+  QueryCancelRefound,
+  CancelOrder
+} from '@/api/api'
 export default {
   name: 'orderList',
   data () {
@@ -191,18 +198,16 @@ export default {
       },
       consignFormVisible: false,
       formLabelWidth: '150px',
-      contactRules: {
-        name: [
-          { required: true, message: 'Name is required', trigger: 'blur' }
+      consignRules: {
+        consignee: [
+          { required: true, message: 'consignee is required', trigger: 'blur' }
         ],
-        documentType: [
-          { required: true, message: 'Document Type is required', trigger: 'change' }
+        phone: [
+          { required: true, message: 'phone is required', trigger: 'blur' },
+          { type: 'number', message: 'phone must be number' }
         ],
-        documentNumber: [
-          { required: true, message: 'Document Number is required', trigger: 'blur' }
-        ],
-        phoneNumber: [
-          { required: true, message: 'Phone Number is required', trigger: 'blur' }
+        weight: [
+          { required: true, message: 'weight is required', trigger: 'blur' }
         ]
       },
       serviceForm: {
@@ -234,23 +239,65 @@ export default {
       this.payForm = row
       this.payFormVisible = true
     },
+    showConsignDialog (row) {
+      this.consignFormVisible = true
+      this.consignFormLoading = true
+      QueryConsignByOrderId(row.id)
+        .then(res => {
+          this.consignForm = Object.assign({}, row, res)
+          this.consignFormLoading = false
+        })
+    },
+    confirmConsign () {
+      this.consignForm.handleDate = dayjs().format('YYYY-MM-DD')
+      this.consignForm.isWithin = false
+      this.consignForm.orderId = this.consignForm.id
+      this.consignForm.targetDate = dayjs(this.consignForm.boughtDate).format('YYYY-MM-DD HH:mm:ss')
+      this.consignFormLoading = true
+      ConfirmConsign(this.consignForm)
+        .then(res => {
+          this.consignFormLoading = false
+          this.consignFormVisible = false
+          this.$message.success(res)
+        })
+      // accountId: "4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"
+      // consignee: "test"
+      // from: "Nan Jing"
+      // handleDate: "2020-07-07"
+      // id: ""
+      // isWithin: false
+      // orderId: "5ad7750b-a68b-49c0-a8c0-32776b067703"
+      // phone: "12345"
+      // targetDate: "2020-06-30 17:03:07"
+      // to: "Shang Hai Hong Qiao"
+      // weight: "1"
+    },
     cancelOrder (row) {
-      let message = 'Cancel The Ticket? You will get none refund. Ticket Order Id:' + row.id
-      this.$confirm(message, 'Cancel Order', {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+      QueryCancelRefound(row.id)
+        .then(res => {
+          let message = 'Cancel The Ticket? You will get ' + res + ' refund. Ticket Order Id:' + row.id
+          this.$confirm(message, 'Cancel Order', {
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            type: 'warning'
+          }).then(() => {
+            CancelOrder()
+              .then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+              })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
+    },
+    printVancher (row) {
+
     }
   },
   filters: {

@@ -95,6 +95,7 @@ export default {
       CollectTicket
         .then(res => {
           this.$message.success('you can enter station with your order id !')
+          this.getOrderList()
         })
     }
   },

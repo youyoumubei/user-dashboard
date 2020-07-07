@@ -14,6 +14,8 @@ const otherOrderList = [{ 'id': 'c47c0aa5-7835-4833-96f0-c66f24af1b07', 'boughtD
 
 const consignList = []
 
+const voucher = { 'voucher_id': 1, 'order_id': 'c47c0aa5-7835-4833-96f0-c66f24af1b07', 'travelDate': '123456799', 'contactName': 'Test', 'train_number': 'K1235', 'seat_number': '6A', 'start_station': 'shanghai', 'dest_station': 'taiyuan', 'price': 100.0 }
+
 export default [
   {
     path: '/api/v1/travelservice/trips/left',

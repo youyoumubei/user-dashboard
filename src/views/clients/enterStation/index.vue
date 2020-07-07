@@ -95,6 +95,7 @@ export default {
       EnterStation()
         .then(res => {
           this.$message.info('server send message')
+          this.getOrderList()
         })
     }
   },
