@@ -57,8 +57,8 @@
           <el-link
             type="primary"
             @click="enterStation(scope.row)">
-            <d2-icon name="trash"/>
-            Collect
+            <d2-icon name="train"/>
+            Enter Station
           </el-link>
         </template>
       </el-table-column>
@@ -68,7 +68,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { QueryMyConsign } from '@/api/api'
+import { QueryMyOrderList, EnterStation } from '@/api/api'
 export default {
   name: 'orderList',
   data () {
@@ -85,14 +85,17 @@ export default {
   },
   methods: {
     getOrderList () {
-      QueryMyConsign()
+      QueryMyOrderList()
         .then(res => {
           this.orderList = res
           this.tblLoading = false
         })
     },
     enterStation (row) {
-      console.log(row)
+      EnterStation()
+        .then(res => {
+          this.$message.info('server send message')
+        })
     }
   },
   filters: {

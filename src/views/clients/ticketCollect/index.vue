@@ -57,7 +57,7 @@
           <el-link
             type="primary"
             @click="collectTicket(scope.row)">
-            <d2-icon name="trash"/>
+            <d2-icon name="hand-paper-o"/>
             Collect
           </el-link>
         </template>
@@ -68,7 +68,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { QueryMyConsign } from '@/api/api'
+import { QueryMyOrderList, CollectTicket } from '@/api/api'
 export default {
   name: 'orderList',
   data () {
@@ -85,14 +85,17 @@ export default {
   },
   methods: {
     getOrderList () {
-      QueryMyConsign()
+      QueryMyOrderList()
         .then(res => {
           this.orderList = res
           this.tblLoading = false
         })
     },
     collectTicket (row) {
-      console.log(row)
+      CollectTicket
+        .then(res => {
+          this.$message.success('you can enter station with your order id !')
+        })
     }
   },
   filters: {

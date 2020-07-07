@@ -49,6 +49,15 @@ const frameIn = [
         component: _import('clients/consignList')
       },
       {
+        path: 'AdvancedSearch',
+        name: 'AdvancedSearch',
+        meta: {
+          title: 'AdvancedSearch',
+          auth: true
+        },
+        component: _import('clients/adSearch')
+      },
+      {
         path: 'TicketCollect',
         name: 'TicketCollect',
         meta: {

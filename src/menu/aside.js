@@ -3,6 +3,7 @@ export default [
   { path: '/index', title: 'Ticket Reserve', icon: 'home' },
   { path: '/OrderList', title: 'Order List', icon: 'home' },
   { path: '/consignList', title: 'Consign List', icon: 'home' },
+  { path: '/AdvancedSearch', title: 'Advanced Search', icon: 'home' },
   {
     path: '/',
     title: 'Execute Flow',

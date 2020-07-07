@@ -36,61 +36,6 @@
           </ul>
         </div>
       </el-card>
-      <!-- <el-card shadow="hover" class="box-card">
-        <div slot="header" class="clearfix">
-          <span>
-            <b>Select Contacts</b>
-          </span>
-          <el-divider direction="vertical"></el-divider>
-          <span>
-            <el-button type="text" @click="getBookingContacts">Refresh Contacts</el-button>
-          </span>
-          <el-divider direction="vertical"></el-divider>
-          <span>
-            <el-button type="text" @click="contactFormVisible = true">Create New Contact</el-button>
-          </span>
-        </div>
-        <el-table
-          :data="contactList"
-          empty-text='No Data'
-          v-loading="tblLoading"
-          style="width: 100%">
-          <el-table-column
-            type="index"
-            label="No.">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="Name">
-          </el-table-column>
-          <el-table-column
-            prop="documentType"
-            label="Document Type">
-            <template slot-scope="scope">
-              <span v-if="scope.row.documentType === 0">null</span>
-              <span v-else-if="scope.row.documentType === 1">ID Card</span>
-              <span v-else-if="scope.row.documentType === 2">Passport</span>
-              <span v-else>Other</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="documentNumber"
-            label="Document Number">
-          </el-table-column>
-          <el-table-column
-            prop="phoneNumber"
-            label="Phone Number">
-          </el-table-column>
-          <el-table-column
-            fixed="right"
-            label="Operation"
-            width="100">
-            <template slot-scope="scope">
-              <el-button @click="preserverBooking(scope.row)" type="primary" size="small">Booking</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card> -->
       <el-card shadow="hover" class="box-card">
         <div slot="header" class="clearfix">
           <b>Ticket Info</b>

@@ -63,5 +63,19 @@ export default [
     handle ({ body }) {
       return consignList
     }
+  },
+  {
+    path: '/api/v1/executeservice/execute/collected/',
+    method: 'get',
+    handle ({ body }) {
+      return true
+    }
+  },
+  {
+    path: '/api/v1/executeservice/execute/execute/',
+    method: 'get',
+    handle ({ body }) {
+      return true
+    }
   }
 ]

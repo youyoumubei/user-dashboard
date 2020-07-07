@@ -118,3 +118,53 @@ export function QueryMyConsign (params) {
     params: params
   })
 }
+
+/**
+ * @description 检票
+ * @param {String} orderId
+ * @param {String} clientToken
+ */
+export function CollectTicket (params) {
+  var url = '/api/v1/executeservice/execute/collected/'
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * @description 进站
+ * @param {String} orderId
+ * @param {String} clientToken
+ */
+export function EnterStation (params) {
+  var url = '/api/v1/executeservice/execute/execute/'
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * @description 高级搜索
+ * @param {String} startingPlace
+ * @param {String} endPlace
+ * @param {String} departureTime
+ * @param {Int}    selectedSearchType
+ */
+export function AdSearch (params) {
+  var url = '/api/v1/travelplanservice/travelPlan/minStation'
+  if (params.selectedSearchType === 1) {
+    url = '/api/v1/travelplanservice/travelPlan/cheapest'
+  }
+  if (params.selectedSearchType === 2) {
+    url = '/api/v1/travelplanservice/travelPlan/quickest'
+  }
+  return request({
+    url: url,
+    method: 'post',
+    data: params
+  })
+}
