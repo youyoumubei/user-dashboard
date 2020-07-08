@@ -25,6 +25,13 @@ export default [
     }
   },
   {
+    path: '/api/v1/travel2service/trips/left',
+    method: 'post',
+    handle ({ body }) {
+      return ticketLeft
+    }
+  },
+  {
     path: '/api/v1/contactservice/contacts/account',
     method: 'get',
     handle ({ body }) {

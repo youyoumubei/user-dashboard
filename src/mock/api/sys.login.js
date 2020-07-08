@@ -1,7 +1,8 @@
 const userDB = [
   { username: 'admin', password: 'admin', uuid: 'admin-uuid', name: '管理员' },
   { username: 'editor', password: 'editor', uuid: 'editor-uuid', name: '编辑' },
-  { username: 'user1', password: 'user1', uuid: 'user1-uuid', name: '用户1' }
+  { username: 'user1', password: 'user1', uuid: 'user1-uuid', name: '用户1' },
+  { username: 'fdse_microservice', password: '111111', userId: '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f' }
 ]
 
 export default [

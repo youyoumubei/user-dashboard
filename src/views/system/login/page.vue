@@ -37,7 +37,7 @@
                   <el-input
                     type="text"
                     v-model="formLogin.username"
-                    placeholder="用户名">
+                    placeholder="User Name">
                     <i slot="prepend" class="fa fa-user-circle-o"></i>
                   </el-input>
                 </el-form-item>
@@ -49,11 +49,11 @@
                     <i slot="prepend" class="fa fa-keyboard-o"></i>
                   </el-input>
                 </el-form-item>
-                <el-form-item prop="code">
+                <el-form-item prop="verificationCode">
                   <el-input
                     type="text"
-                    v-model="formLogin.code"
-                    placeholder="验证码">
+                    v-model="formLogin.verificationCode"
+                    placeholder="Verification Code">
                     <template slot="append">
                       <img class="login-code" src="./image/login-code.png">
                     </template>
@@ -64,7 +64,7 @@
                   @click="submit"
                   type="primary"
                   class="button-login">
-                  登录
+                  Login
                 </el-button>
               </el-form>
             </el-card>
@@ -110,49 +110,32 @@ export default {
     return {
       timeInterval: null,
       time: dayjs().format('HH:mm:ss'),
-      users: [
-        {
-          name: 'Admin',
-          username: 'admin',
-          password: 'admin'
-        },
-        {
-          name: 'Editor',
-          username: 'editor',
-          password: 'editor'
-        },
-        {
-          name: 'User1',
-          username: 'user1',
-          password: 'user1'
-        }
-      ],
       // 表单
       formLogin: {
-        username: 'admin',
-        password: 'admin',
-        code: 'v9am'
+        username: 'fdse_microservice',
+        password: '111111',
+        verificationCode: 'v9am'
       },
       // 表单校验
       rules: {
         username: [
           {
             required: true,
-            message: '请输入用户名',
+            message: 'User Name is required',
             trigger: 'blur'
           }
         ],
         password: [
           {
             required: true,
-            message: '请输入密码',
+            message: 'password is required',
             trigger: 'blur'
           }
         ],
-        code: [
+        verificationCode: [
           {
             required: true,
-            message: '请输入验证码',
+            message: 'Verify Code is required',
             trigger: 'blur'
           }
         ]
@@ -175,15 +158,6 @@ export default {
       this.time = dayjs().format('HH:mm:ss')
     },
     /**
-     * @description 接收选择一个用户快速登录的事件
-     * @param {Object} user 用户信息
-     */
-    handleUserBtnClick (user) {
-      this.formLogin.username = user.username
-      this.formLogin.password = user.password
-      this.submit()
-    },
-    /**
      * @description 提交表单
      */
     // 提交登录信息
@@ -195,7 +169,8 @@ export default {
           // 具体需要传递的数据请自行修改代码
           this.login({
             username: this.formLogin.username,
-            password: this.formLogin.password
+            password: this.formLogin.password,
+            verificationCode: this.formLogin.verificationCode
           })
             .then(() => {
               // 重定向对象不存在则返回顶层路径

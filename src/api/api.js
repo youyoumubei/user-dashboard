@@ -7,7 +7,7 @@ import request from '@/plugin/axios'
  * @param {String} departureTime
  */
 export function TravelServiceTripsLeft (params) {
-  var url = '/api/v1/travelservice/trips/left'
+  var url = 'v1/travelservice/trips/left'
   return request({
     url: url,
     method: 'post',
@@ -22,7 +22,7 @@ export function TravelServiceTripsLeft (params) {
  * @param {String} departureTime
  */
 export function Travel2ServiceTripsLeft (params) {
-  var url = '/api/v1/travel2service/trips/left'
+  var url = 'v1/travel2service/trips/left'
   return request({
     url: url,
     method: 'post',
@@ -36,7 +36,7 @@ export function Travel2ServiceTripsLeft (params) {
  * @param {String} clientToken
  */
 export function QueryBookingContacts (params) {
-  var url = '/api/v1/contactservice/contacts/account'
+  var url = 'v1/contactservice/contacts/account'
   return request({
     url: url,
     method: 'get',
@@ -49,7 +49,7 @@ export function QueryBookingContacts (params) {
  * @param {String} clientToken
  */
 export function GetAssuranceType (params) {
-  var url = '/api/v1/assuranceservice/assurances/types'
+  var url = 'v1/assuranceservice/assurances/types'
   return request({
     url: url,
     method: 'get',
@@ -66,7 +66,7 @@ export function GetAssuranceType (params) {
  * @param {String} clientToken
  */
 export function GetFoodInfo (params) {
-  var url = '/api/v1/foodservice/foods/2020-07-02/Shang%20Hai/Su%20Zhou/D1345'
+  var url = 'v1/foodservice/foods/2020-07-02/Shang%20Hai/Su%20Zhou/D1345'
   return request({
     url: url,
     method: 'get',
@@ -75,7 +75,7 @@ export function GetFoodInfo (params) {
 }
 
 export function QueryMyOrderList (params) {
-  var url = '/api/v1/orderservice/order/refresh'
+  var url = 'v1/orderservice/order/refresh'
   return request({
     url: url,
     method: 'post',
@@ -93,7 +93,7 @@ export function QueryMyOrderList (params) {
 }
 
 export function QueryMyOtherOrderList (params) {
-  var url = '/api/v1/orderOtherService/orderOther/refresh'
+  var url = 'v1/orderOtherService/orderOther/refresh'
   return request({
     url: url,
     method: 'post',
@@ -111,7 +111,7 @@ export function QueryMyOtherOrderList (params) {
 }
 
 export function QueryMyConsign (params) {
-  var url = '/api/v1/consignservice/consigns/account/'
+  var url = 'v1/consignservice/consigns/account/'
   return request({
     url: url,
     method: 'get',
@@ -125,7 +125,7 @@ export function QueryMyConsign (params) {
  * @param {String} clientToken
  */
 export function CollectTicket (params) {
-  var url = '/api/v1/executeservice/execute/collected/'
+  var url = 'v1/executeservice/execute/collected/'
   return request({
     url: url,
     method: 'get',
@@ -139,7 +139,7 @@ export function CollectTicket (params) {
  * @param {String} clientToken
  */
 export function EnterStation (params) {
-  var url = '/api/v1/executeservice/execute/execute/'
+  var url = 'v1/executeservice/execute/execute/'
   return request({
     url: url,
     method: 'get',
@@ -155,12 +155,12 @@ export function EnterStation (params) {
  * @param {Int}    selectedSearchType
  */
 export function AdSearch (params) {
-  var url = '/api/v1/travelplanservice/travelPlan/minStation'
+  var url = 'v1/travelplanservice/travelPlan/minStation'
   if (params.selectedSearchType === 1) {
-    url = '/api/v1/travelplanservice/travelPlan/cheapest'
+    url = 'v1/travelplanservice/travelPlan/cheapest'
   }
   if (params.selectedSearchType === 2) {
-    url = '/api/v1/travelplanservice/travelPlan/quickest'
+    url = 'v1/travelplanservice/travelPlan/quickest'
   }
   return request({
     url: url,
@@ -175,7 +175,7 @@ export function AdSearch (params) {
  * @param {String} clientToken
  */
 export function QueryConsignByOrderId (params) {
-  var url = '/api/v1/consignservice/consigns/order/'
+  var url = 'v1/consignservice/consigns/order/'
   return request({
     url: url,
     method: 'get',
@@ -189,7 +189,7 @@ export function QueryConsignByOrderId (params) {
  * @param {String} clientToken
  */
 export function ConfirmConsign (params) {
-  var url = '/api/v1/consignservice/consigns'
+  var url = 'v1/consignservice/consigns'
   return request({
     url: url,
     method: 'post',
@@ -203,7 +203,7 @@ export function ConfirmConsign (params) {
  * @param {String} clientToken
  */
 export function QueryCancelRefound (params) {
-  var url = '/api/v1/cancelservice/cancel/refound/'
+  var url = 'v1/cancelservice/cancel/refound/'
   return request({
     url: url,
     method: 'get',
@@ -217,8 +217,8 @@ export function QueryCancelRefound (params) {
  * @param {String} clientToken
  */
 export function CancelOrder (params) {
-  // "/api/v1/cancelservice/cancel/" + orderId + "/" + sessionStorage.getItem("client_id")
-  var url = '/api/v1/cancelservice/cancel/'
+  // "v1/cancelservice/cancel/" + orderId + "/" + sessionStorage.getItem("client_id")
+  var url = 'v1/cancelservice/cancel/'
   return request({
     url: url,
     method: 'get',

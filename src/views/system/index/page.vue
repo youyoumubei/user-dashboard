@@ -33,6 +33,7 @@
 
     <el-table
       :data="travelList"
+      v-loading="tblLoading"
       empty-text='No Data'
       style="width: 100%">
       <el-table-column
@@ -115,23 +116,8 @@ export default {
   components: {},
   data () {
     return {
-      travelList: [
-        {
-          'tripId': {
-            'type': 'D',
-            'number': '1345'
-          },
-          'trainTypeId': 'DongCheOne',
-          'startingStation': 'Shang Hai',
-          'terminalStation': 'Su Zhou',
-          'startingTime': 1367622000000,
-          'endTime': 1367622960000,
-          'economyClass': 1073741823,
-          'confortClass': 1073741823,
-          'priceForEconomyClass': '22.5',
-          'priceForConfortClass': '50.0'
-        }
-      ],
+      tblLoading: false,
+      travelList: [],
       tempTravelList: [],
       selectedSeats: [],
       searchForm: {
@@ -216,32 +202,47 @@ export default {
       })
     },
     searchTravel () {
+      this.tblLoading = true
       this.$refs['searchForm'].validate((valid) => {
         if (valid) {
           var travelQueryData = JSON.stringify(this.searchForm)
           var trainType = this.searchForm.selectedTrainType
-          this.tempTravelList = []
           this.travelList = []
 
           if (trainType === 0) {
             TravelServiceTripsLeft(travelQueryData)
               .then(res => {
-                console.log(res)
+                this.travelList = res
+                this.tblLoading = false
+              })
+              .catch(res => {
+                this.tblLoading = false
               })
 
             Travel2ServiceTripsLeft(travelQueryData)
               .then(res => {
-                console.log(res)
+                this.travelList = Object.assign([], this.travelList, res)
+              })
+              .catch(res => {
+                this.tblLoading = false
               })
           } else if (trainType === 1) {
             TravelServiceTripsLeft(travelQueryData)
               .then(res => {
-                console.log(res)
+                this.travelList = res
+                this.tblLoading = false
+              })
+              .catch(res => {
+                this.tblLoading = false
               })
           } else if (trainType === 2) {
             Travel2ServiceTripsLeft(travelQueryData)
               .then(res => {
-                console.log(res)
+                this.travelList = res
+                this.tblLoading = false
+              })
+              .catch(res => {
+                this.tblLoading = false
               })
           }
         } else {

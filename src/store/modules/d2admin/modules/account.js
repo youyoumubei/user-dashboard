@@ -1,4 +1,4 @@
-import { Message, MessageBox } from 'element-ui'
+import { MessageBox } from 'element-ui'
 import util from '@/libs/util.js'
 import router from '@/router'
 import { AccountLogin } from '@api/sys.login'
@@ -15,13 +15,15 @@ export default {
      */
     login ({ dispatch }, {
       username = '',
-      password = ''
+      password = '',
+      verificationCode = ''
     } = {}) {
       return new Promise((resolve, reject) => {
         // 开始请求登录接口
         AccountLogin({
           username,
-          password
+          password,
+          verificationCode
         })
           .then(async res => {
             // 设置 cookie 一定要存 uuid 和 token 两个 cookie
@@ -29,11 +31,15 @@ export default {
             // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
             // token 代表用户当前登录状态 建议在网络请求中携带 token
             // 如有必要 token 需要定时更新，默认保存一天
-            util.cookies.set('uuid', res.uuid)
-            util.cookies.set('token', res.token)
+            // util.cookies.set('uuid', res.uuid)
+            // util.cookies.set('token', res.token)
+            util.cookies.set('client_id', res.userId)
+            util.cookies.set('client_name', res.username)
+            util.cookies.set('client_token', res.token)
             // 设置 vuex 用户信息
             await dispatch('d2admin/user/set', {
-              name: res.name
+              // name: res.name
+              username: res.username
             }, { root: true })
             // 用户登录后从持久化数据加载一系列的设置
             await dispatch('load')
@@ -57,8 +63,11 @@ export default {
        */
       async function logout () {
         // 删除cookie
-        util.cookies.remove('token')
-        util.cookies.remove('uuid')
+        // util.cookies.remove('token')
+        // util.cookies.remove('uuid')
+        util.cookies.remove('client_id')
+        util.cookies.remove('client_name')
+        util.cookies.remove('client_token')
         // 清空 vuex 用户信息
         await dispatch('d2admin/user/set', {}, { root: true })
         // 跳转路由
@@ -69,7 +78,7 @@ export default {
       // 判断是否需要确认
       if (confirm) {
         commit('d2admin/gray/set', true, { root: true })
-        MessageBox.confirm('确定要注销当前用户吗', '注销用户', {
+        MessageBox.confirm('Are you sure Logout?', 'Logout', {
           type: 'warning'
         })
           .then(() => {
@@ -78,9 +87,9 @@ export default {
           })
           .catch(() => {
             commit('d2admin/gray/set', false, { root: true })
-            Message({
-              message: '取消注销操作'
-            })
+            // Message({
+            //   message: '取消注销操作'
+            // })
           })
       } else {
         logout()
