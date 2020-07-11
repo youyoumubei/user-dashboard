@@ -129,7 +129,7 @@
     </el-table>
 
     <el-dialog title="Pay For Reserve" :visible.sync="payFormVisible" width="30%">
-      <el-form :model="payForm">
+      <el-form :model="payForm" v-loading="payFormLoading">
         <el-form-item label="orderId">
           <el-input v-model="payForm.id" readonly></el-input>
         </el-form-item>
@@ -141,7 +141,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="payFormVisible = false">Cancel</el-button>
-          <el-button type="primary">Submit</el-button>
+          <el-button type="primary" @click="payMyOrder">Submit</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -159,7 +159,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="consignFormVisible = false">Cancel</el-button>
-          <el-button type="primary">Save</el-button>
+          <el-button type="primary" @click="confirmConsign">Save</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -174,8 +174,10 @@ import {
   QueryConsignByOrderId,
   ConfirmConsign,
   QueryCancelRefound,
-  CancelOrder
+  CancelOrder,
+  PayMyOrder
 } from '@/api/api'
+import util from '@/libs/util.js'
 export default {
   name: 'orderList',
   data () {
@@ -183,6 +185,7 @@ export default {
       step: 0,
       tblLoading: true,
       consignFormLoading: false,
+      payFormLoading: false,
       ticketInfo: {},
       orderList: [],
       statusExpress: ['Not Paid', 'Paid & Not Collected', 'Collected', 'Cancel & Rebook', 'Cancel', 'Refunded', 'Used', 'other'],
@@ -225,6 +228,8 @@ export default {
   },
   methods: {
     getOrderList () {
+      this.tblLoading = true
+      this.orderList = []
       QueryMyOrderList()
         .then(res => {
           this.orderList = this.orderList.concat(res)
@@ -238,6 +243,23 @@ export default {
     showPayDialog (row) {
       this.payForm = row
       this.payFormVisible = true
+    },
+    payMyOrder () {
+      // var params = JSON.stringify({ orderId: this.payForm.id, tripId: this.payForm.trainNumber })
+      var params = { orderId: this.payForm.id, tripId: this.payForm.trainNumber }
+      this.payFormLoading = true
+      PayMyOrder(params)
+        .then(res => {
+          this.payFormLoading = false
+          this.payFormVisible = false
+          this.$message.success('success')
+          this.getOrderList()
+        })
+        .catch(res => {
+          this.payFormLoading = false
+          this.payFormVisible = false
+          this.$message.error('Pay Fail. Reason Not Clear.Please check the order status before you try.')
+        })
     },
     showConsignDialog (row) {
       this.consignFormVisible = true
@@ -254,23 +276,13 @@ export default {
       this.consignForm.orderId = this.consignForm.id
       this.consignForm.targetDate = dayjs(this.consignForm.boughtDate).format('YYYY-MM-DD HH:mm:ss')
       this.consignFormLoading = true
+      // ConfirmConsign(JSON.stringify(this.consignForm))
       ConfirmConsign(this.consignForm)
         .then(res => {
           this.consignFormLoading = false
           this.consignFormVisible = false
           this.$message.success(res)
         })
-      // accountId: "4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"
-      // consignee: "test"
-      // from: "Nan Jing"
-      // handleDate: "2020-07-07"
-      // id: ""
-      // isWithin: false
-      // orderId: "5ad7750b-a68b-49c0-a8c0-32776b067703"
-      // phone: "12345"
-      // targetDate: "2020-06-30 17:03:07"
-      // to: "Shang Hai Hong Qiao"
-      // weight: "1"
     },
     cancelOrder (row) {
       QueryCancelRefound(row.id)
@@ -281,22 +293,23 @@ export default {
             cancelButtonText: 'No',
             type: 'warning'
           }).then(() => {
-            CancelOrder()
+            CancelOrder(row.id, util.cookies.get('client_id'))
               .then(res => {
                 this.$message({
                   type: 'success',
-                  message: '删除成功!'
+                  message: 'success'
                 })
+                this.getOrderList()
               })
           }).catch(() => {
             this.$message({
               type: 'info',
-              message: '已取消删除'
+              message: 'cancel'
             })
           })
         })
     },
-    printVancher (row) {
+    printVoucher (row) {
 
     }
   },

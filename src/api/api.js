@@ -174,12 +174,11 @@ export function AdSearch (params) {
  * @param {String} orderId
  * @param {String} clientToken
  */
-export function QueryConsignByOrderId (params) {
-  var url = 'v1/consignservice/consigns/order/'
+export function QueryConsignByOrderId (orderId) {
+  var url = 'v1/consignservice/consigns/order/' + orderId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 
@@ -192,7 +191,7 @@ export function ConfirmConsign (params) {
   var url = 'v1/consignservice/consigns'
   return request({
     url: url,
-    method: 'post',
+    method: 'put',
     data: params
   })
 }
@@ -202,12 +201,11 @@ export function ConfirmConsign (params) {
  * @param {String} orderId
  * @param {String} clientToken
  */
-export function QueryCancelRefound (params) {
-  var url = 'v1/cancelservice/cancel/refound/'
+export function QueryCancelRefound (orderId) {
+  var url = 'v1/cancelservice/cancel/refound/' + orderId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 
@@ -216,13 +214,12 @@ export function QueryCancelRefound (params) {
  * @param {String} orderId
  * @param {String} clientToken
  */
-export function CancelOrder (params) {
+export function CancelOrder (orderId, clientId) {
   // "v1/cancelservice/cancel/" + orderId + "/" + sessionStorage.getItem("client_id")
-  var url = 'v1/cancelservice/cancel/'
+  var url = 'v1/cancelservice/cancel/' + orderId + '/' + clientId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 
@@ -238,5 +235,20 @@ export function PrintVancher (params) {
     url: url,
     method: 'get',
     params: params
+  })
+}
+
+/**
+ * @description 支付订单
+ * @param {String} orderId
+ * @param {String} clientToken
+ * @param {Int}    type
+ */
+export function PayMyOrder (params) {
+  var url = 'v1/inside_pay_service/inside_payment'
+  return request({
+    url: url,
+    method: 'post',
+    data: params
   })
 }

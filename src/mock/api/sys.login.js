@@ -13,7 +13,7 @@ export default [
       const user = userDB.find(e => e.username === body.username && e.password === body.password)
       if (user) {
         return {
-          code: 0,
+          status: 1,
           msg: '登录成功',
           data: {
             ...user,
@@ -22,7 +22,7 @@ export default [
         }
       } else {
         return {
-          code: 401,
+          status: 401,
           msg: '用户名或密码错误',
           data: {}
         }
