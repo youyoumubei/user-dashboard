@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-dashboard
+  name: ts-ui-dashboard-test
 spec:
   selector:
     matchLabels:
-      app: test-dashboard
+      app: ts-ui-dashboard-test
   replicas: 1
   template:
     metadata:
       labels:
-        app: test-dashboard
+        app: ts-ui-dashboard-test
     spec:
       containers:
-      - name: test-dashboard
-        image: youyoumubei/ts-ui-dashboard:0.0.4
+      - name: ts-ui-dashboard-test
+        image: youyoumubei/ts-ui-dashboard-test:0.7
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -31,13 +31,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-dashboard
+  name: ts-ui-dashboard-test
 spec:
   type: NodePort
   ports:
     - name: http
       port: 8080
-      nodePort: 33677
+      nodePort: 32678
   selector:
-   app: test-dashboard
+   app: ts-ui-dashboard-test
 ---

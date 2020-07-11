@@ -55,7 +55,8 @@
                     v-model="formLogin.verificationCode"
                     placeholder="Verification Code">
                     <template slot="append">
-                      <img class="login-code" src="./image/login-code.png">
+                      <!-- <img class="login-code" @click="reloadYZM" src="./image/login-code.png"> -->
+                      <img class="login-code" @click="reloadYZM" :src="yzm">
                     </template>
                   </el-input>
                 </el-form-item>
@@ -110,6 +111,7 @@ export default {
     return {
       timeInterval: null,
       time: dayjs().format('HH:mm:ss'),
+      yzm: '/api/v1/verifycode/generate',
       // 表单
       formLogin: {
         username: 'fdse_microservice',
@@ -181,6 +183,9 @@ export default {
           this.$message.error('表单校验失败，请检查')
         }
       })
+    },
+    reloadYZM () {
+      this.yzm = '/api/v1/verifycode/generate?' + Math.random()
     }
   }
 }
