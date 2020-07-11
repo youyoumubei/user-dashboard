@@ -150,7 +150,8 @@ export default {
       this.tblLoading = true
       this.$refs['searchForm'].validate((valid) => {
         if (valid) {
-          var travelQueryData = JSON.stringify(this.searchForm)
+          // var travelQueryData = JSON.stringify(this.searchForm)
+          var travelQueryData = this.searchForm
           var trainType = this.searchForm.selectedTrainType
           this.travelList = []
 

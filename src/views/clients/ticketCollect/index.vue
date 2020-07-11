@@ -85,6 +85,7 @@ export default {
   },
   methods: {
     getOrderList () {
+      this.tblLoading = true
       QueryMyOrderList()
         .then(res => {
           this.orderList = res
@@ -92,7 +93,7 @@ export default {
         })
     },
     collectTicket (row) {
-      CollectTicket
+      CollectTicket(row.id)
         .then(res => {
           this.$message.success('you can enter station with your order id !')
           this.getOrderList()

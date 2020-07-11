@@ -14,6 +14,8 @@ const otherOrderList = { 'status': 1, 'msg': 'Success', 'data': [{ 'id': 'c47c0a
 
 const consignList = []
 
+const ret = { status: 1, msg: 'Success', data: null }
+
 // const voucher = { 'status': 1, 'msg': 'Success', 'data': { 'voucher_id': 1, 'order_id': 'c47c0aa5-7835-4833-96f0-c66f24af1b07', 'travelDate': '123456799', 'contactName': 'Test', 'train_number': 'K1235', 'seat_number': '6A', 'start_station': 'shanghai', 'dest_station': 'taiyuan', 'price': 100.0 } }
 
 export default [
@@ -74,72 +76,80 @@ export default [
     }
   },
   {
-    path: '/api/v1/executeservice/execute/collected/',
+    path: '/api/v1/executeservice/execute/collected/5ad7750b-a68b-49c0-a8c0-32776b067703',
     method: 'get',
     handle ({ body }) {
-      return true
+      return ret
     }
   },
   {
-    path: '/api/v1/executeservice/execute/execute/',
+    path: '/api/v1/executeservice/execute/execute/5ad7750b-a68b-49c0-a8c0-32776b067703',
     method: 'get',
     handle ({ body }) {
-      return true
+      return ret
     }
   },
   {
     path: '/api/v1/cancelservice/cancel/refound/5ad7750b-a68b-49c0-a8c0-32776b067703',
     method: 'get',
     handle ({ body }) {
-      return {
-        status: 1,
-        msg: 'Success',
-        data: null
-      }
+      return ret
     }
   },
   {
     path: '/api/v1/cancelservice/cancel/5ad7750b-a68b-49c0-a8c0-32776b067703/4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f',
     method: 'get',
     handle ({ body }) {
-      return {
-        status: 1,
-        msg: 'Success',
-        data: null
-      }
+      return ret
     }
   },
   {
     path: '/api/v1/consignservice/consigns/order/5ad7750b-a68b-49c0-a8c0-32776b067703',
     method: 'get',
     handle ({ body }) {
-      return {
-        status: 1,
-        msg: 'Success',
-        data: null
-      }
+      return ret
     }
   },
   {
     path: '/api/v1/consignservice/consigns',
     method: 'put',
     handle ({ body }) {
-      return {
-        status: 1,
-        msg: 'Success',
-        data: null
-      }
+      return ret
     }
   },
   {
     path: '/api/v1/inside_pay_service/inside_payment',
     method: 'post',
     handle ({ body }) {
-      return {
-        status: 1,
-        msg: 'Success',
-        data: null
-      }
+      return ret
+    }
+  },
+  {
+    path: '/api/v1/getVoucher',
+    method: 'post',
+    handle ({ body }) {
+      return ret
+    }
+  },
+  {
+    path: '/api/v1/travelplanservice/travelPlan/minStation',
+    method: 'post',
+    handle ({ body }) {
+      return ticketLeft
+    }
+  },
+  {
+    path: '/api/v1/travelplanservice/travelPlan/cheapest',
+    method: 'post',
+    handle ({ body }) {
+      return ticketLeft
+    }
+  },
+  {
+    path: '/api/v1/travelplanservice/travelPlan/quickest',
+    method: 'post',
+    handle ({ body }) {
+      return ticketLeft
     }
   }
 ]

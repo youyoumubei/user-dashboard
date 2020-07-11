@@ -2,7 +2,7 @@ import request from '@/plugin/axios'
 
 export function AccountLogin (data) {
   return request({
-    url: 'login',
+    url: 'v1/users/login',
     method: 'post',
     data
   })

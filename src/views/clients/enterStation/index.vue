@@ -85,6 +85,7 @@ export default {
   },
   methods: {
     getOrderList () {
+      this.tblLoading = true
       QueryMyOrderList()
         .then(res => {
           this.orderList = res
@@ -92,9 +93,9 @@ export default {
         })
     },
     enterStation (row) {
-      EnterStation()
+      EnterStation(row.id)
         .then(res => {
-          this.$message.info('server send message')
+          this.$message.success('server send message')
           this.getOrderList()
         })
     }

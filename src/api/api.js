@@ -124,12 +124,11 @@ export function QueryMyConsign (params) {
  * @param {String} orderId
  * @param {String} clientToken
  */
-export function CollectTicket (params) {
-  var url = 'v1/executeservice/execute/collected/'
+export function CollectTicket (orderId) {
+  var url = 'v1/executeservice/execute/collected/' + orderId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 
@@ -138,12 +137,11 @@ export function CollectTicket (params) {
  * @param {String} orderId
  * @param {String} clientToken
  */
-export function EnterStation (params) {
-  var url = 'v1/executeservice/execute/execute/'
+export function EnterStation (orderId) {
+  var url = 'v1/executeservice/execute/execute/' + orderId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 
@@ -229,12 +227,12 @@ export function CancelOrder (orderId, clientId) {
  * @param {String} clientToken
  * @param {Int}    type
  */
-export function PrintVancher (params) {
+export function PrintVoucher (params) {
   var url = '/getVoucher'
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'post',
+    data: params
   })
 }
 

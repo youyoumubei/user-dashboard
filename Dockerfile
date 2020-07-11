@@ -15,6 +15,6 @@ RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shang
 
 # COPY nginx.conf /etc/nginx/conf/conf.d/
 
-# COPY nginx.conf /etc/nginx/conf.d/nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/nginx.conf
 
 COPY dist/ /usr/share/nginx/html/

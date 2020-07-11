@@ -33,6 +33,7 @@
 
     <el-table
       :data="travelList"
+      v-loading="tblLoading"
       empty-text='No Data'
       style="width: 100%">
       <el-table-column
@@ -115,35 +116,14 @@ export default {
   components: {},
   data () {
     return {
-      travelList: [
-        {
-          'tripId': {
-            'type': 'D',
-            'number': '1345'
-          },
-          'trainTypeId': 'DongCheOne',
-          'startingStation': 'Shang Hai',
-          'terminalStation': 'Su Zhou',
-          'startingTime': 1367622000000,
-          'endTime': 1367622960000,
-          'economyClass': 1073741823,
-          'confortClass': 1073741823,
-          'priceForEconomyClass': '22.5',
-          'priceForConfortClass': '50.0'
-        }
-      ],
-      tempTravelList: [],
+      tblLoading: false,
+      travelList: [],
       selectedSeats: [],
       searchForm: {
         startingPlace: 'Shang Hai',
         endPlace: 'Su Zhou',
         departureTime: dayjs().format('YYYY-MM-DD'),
-        selectedSearchType: 1,
-        trainTypes: [
-          { text: 'All', value: 0 },
-          { text: 'GaoTie DongChe', value: 1 },
-          { text: 'Other', value: 2 }
-        ]
+        selectedSearchType: 1
       },
       rules: {
         startingPlace: [
@@ -160,70 +140,18 @@ export default {
     }
   },
   methods: {
-    mounted () {
-      // this.searchForm.departureTime = dayjs().format('YYYY-MM-DD')
-      this.checkLogin()
-    },
-    checkLogin () {
-      var username = sessionStorage.getItem('client_name')
-      if (username == null) {
-        // alert('Please login first!')
-      } else {
-        document.getElementById('client_name').innerHTML = username
-      }
-    },
-    logOutClient () {
-      var logoutInfo
-      logoutInfo.id = this.getCookie('loginId')
-      if (logoutInfo.id == null || logoutInfo.id == '') {
-        alert('No cookie named `loginId` exist. please login')
-        location.href = 'client_login.html'
-        return
-      }
-      logoutInfo.token = this.getCookie('loginToken')
-      if (logoutInfo.token == null || logoutInfo.token == '') {
-        // alert('No cookie named 'loginToken' exist.  please login')
-        location.href = 'client_login.html'
-        return
-      }
-      var data = JSON.stringify(logoutInfo)
-      var that = this
-      $.ajax({
-        type: 'post',
-        url: '/logout',
-        contentType: 'application/json',
-        dataType: 'json',
-        data: data,
-        xhrFields: {
-          withCredentials: true
-        },
-        success: function (result) {
-          if (result['status'] === true) {
-            that.setCookie('loginId', '', -1)
-            that.setCookie('loginToken', '', -1)
-          } else if (result['message'] === 'Not Login') {
-            that.setCookie('loginId', '', -1)
-            that.setCookie('loginToken', '', -1)
-          }
-          sessionStorage.setItem('client_id', '-1')
-          sessionStorage.setItem('client_name', 'Not Login')
-          document.getElementById('client_name').innerHTML = 'Not Login'
-          location.href = 'client_login.html'
-        },
-        error: function (e) {
-          alert('logout error')
-        }
-      })
-    },
     searchTravel () {
+      this.tblLoading = true
       this.$refs['searchForm'].validate((valid) => {
         if (valid) {
-          this.tempTravelList = []
           this.travelList = []
-
           AdSearch(this.searchForm)
             .then(res => {
-              console.log(res)
+              this.travelList = res
+              this.tblLoading = false
+            })
+            .catch(res => {
+              this.tblLoading = false
             })
         } else {
           return false
@@ -246,84 +174,6 @@ export default {
           date: this.searchForm.departureTime
         }
       })
-    },
-    login () {
-      var loginInfo
-      loginInfo.email = this.email
-      if (loginInfo.email == null || loginInfo.email == '') {
-        alert('Email Can Not Be Empty.')
-        return
-      }
-      if (this.checkEmailFormat(loginInfo.email) == false) {
-        alert('Email Format Wrong.')
-        return
-      }
-      loginInfo.password = this.password
-      if (loginInfo.password == null || loginInfo.password == '') {
-        alert('Password Can Not Be Empty.')
-        return
-      }
-      loginInfo.verificationCode = this.verifyCode
-      if (
-        loginInfo.verificationCode == null ||
-        loginInfo.verificationCode == ''
-      ) {
-        alert('Verification Code Can Not Be Empty.')
-        return
-      }
-      var data = JSON.stringify(loginInfo)
-      $.ajax({
-        type: 'post',
-        url: '/login',
-        contentType: 'application/json',
-        dataType: 'json',
-        data: data,
-        xhrFields: {
-          withCredentials: true
-        },
-        success: function (result) {
-          var obj = result
-          if (obj['status'] == true) {
-            sessionStorage.setItem('client_id', obj['account'].id)
-            sessionStorage.setItem('client_name', obj['account'].name)
-            document.cookie = 'loginId=' + obj['account'].id
-            document.cookie = 'loginToken=' + obj['token']
-            document.getElementById('client_name').innerHTML =
-              obj['account'].name
-            //  alert(obj['message'] + obj['account'].name + '======-')
-            // login in success
-          } else {
-            setCookie('loginId', '', -1)
-            setCookie('loginToken', '', -1)
-            sessionStorage.setItem('client_id', '-1')
-            sessionStorage.setItem('client_name', 'Not Login')
-            document.getElementById('client_name').innerHTML = 'Not Login'
-          }
-        }
-      })
-    },
-    checkEmailFormat (email) {
-      var emailFormat = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/
-      if (!emailFormat.test(email)) {
-        return false
-      } else {
-        return true
-      }
-    },
-    getCookie (cname) {
-      var name = cname + '='
-      var ca = document.cookie.split('')
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i].trim()
-        if (c.indexOf(name) === 0) return c.substring(name.length, c.length)
-      }
-      return ''
-    },
-    setCookie (cname, cvalue, exdays) {
-      var d = new Date()
-      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000)
-      var expires = 'expires=' + d.toUTCString()
-      document.cookie = cname + '=' + cvalue + ' ' + expires
     }
   },
   filters: {

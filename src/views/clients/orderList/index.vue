@@ -163,6 +163,41 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <el-dialog title="Voucher" width="30%" :visible.sync="voucherFormVisible">
+      <el-form :model="voucherForm" :rules="consignRules" ref="voucherForm" v-loading="voucherFormLoading">
+        <el-form-item label="Voucher Number">
+          <el-input v-model="voucherForm.voucher_id"></el-input>
+        </el-form-item>
+        <el-form-item label="Order Id">
+          <el-input v-model="voucherForm.order_id"></el-input>
+        </el-form-item>
+        <el-form-item label="Bought Date">
+          <el-date-picker v-model="voucherForm.travelDate"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="Passenger Name">
+          <el-input v-model="voucherForm.contactName"></el-input>
+        </el-form-item>
+        <el-form-item label="Train Number">
+          <el-input v-model="voucherForm.train_number"></el-input>
+        </el-form-item>
+        <el-form-item label="Seat Number">
+          <el-input v-model="voucherForm.seat_number"></el-input>
+        </el-form-item>
+        <el-form-item label="Start Station">
+          <el-input v-model="voucherForm.start_station"></el-input>
+        </el-form-item>
+        <el-form-item label="Destination Station">
+          <el-input v-model="voucherForm.dest_station"></el-input>
+        </el-form-item>
+        <el-form-item label="Price">
+          <el-input v-model="voucherForm.price"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="voucherFormVisible = false">Cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </d2-container>
 </template>
 
@@ -175,7 +210,8 @@ import {
   ConfirmConsign,
   QueryCancelRefound,
   CancelOrder,
-  PayMyOrder
+  PayMyOrder,
+  PrintVoucher
 } from '@/api/api'
 import util from '@/libs/util.js'
 export default {
@@ -186,10 +222,12 @@ export default {
       tblLoading: true,
       consignFormLoading: false,
       payFormLoading: false,
+      voucherFormLoading: false,
       ticketInfo: {},
       orderList: [],
       statusExpress: ['Not Paid', 'Paid & Not Collected', 'Collected', 'Cancel & Rebook', 'Cancel', 'Refunded', 'Used', 'other'],
       payFormVisible: false,
+      voucherFormVisible: false,
       assuranceList: [],
       trainFoodList: [],
       stationFoodList: [],
@@ -213,8 +251,16 @@ export default {
           { required: true, message: 'weight is required', trigger: 'blur' }
         ]
       },
-      serviceForm: {
-        assurance: 0
+      voucherForm: {
+        voucher_id: null,
+        order_id: null,
+        travelDate: '',
+        contactName: '',
+        train_number: '',
+        seat_number: '',
+        start_station: '',
+        dest_station: '',
+        price: null
       },
       payForm: {
         id: '',
@@ -310,7 +356,15 @@ export default {
         })
     },
     printVoucher (row) {
-
+      let type = 0
+      if (row.trainNumber.startsWith('G') || row.trainNumber.startsWith('D')) {
+        type = 1
+      }
+      PrintVoucher({ orderId: row.id, type: type })
+        .then(res => {
+          this.voucherFormLoading = false
+          this.voucherForm = res
+        })
     }
   },
   filters: {
