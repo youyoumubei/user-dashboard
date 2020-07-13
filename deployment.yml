@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ts-ui-dashboard-test
-        image: youyoumubei/ts-ui-dashboard-test:0.7
+        image: youyoumubei/ts-ui-dashboard-test:1.2
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
