@@ -63,20 +63,23 @@
 <script>
 import dayjs from 'dayjs'
 import { QueryMyConsign } from '@/api/api'
+import util from '@/libs/util.js'
 export default {
   name: 'consignList',
   data () {
     return {
+      clientId: null,
       tblLoading: true,
       consignList: []
     }
   },
   mounted () {
+    this.clientId = util.cookies.get('client_id')
     this.getconsignList()
   },
   methods: {
     getconsignList () {
-      QueryMyConsign()
+      QueryMyConsign(this.clientId)
         .then(res => {
           this.consignList = res
           this.tblLoading = false

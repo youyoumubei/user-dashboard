@@ -35,12 +35,11 @@ export function Travel2ServiceTripsLeft (params) {
  * @param {String} clientId
  * @param {String} clientToken
  */
-export function QueryBookingContacts (params) {
-  var url = 'v1/contactservice/contacts/account'
+export function QueryBookingContacts (clientId) {
+  var url = 'v1/contactservice/contacts/account/' + clientId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 
@@ -66,21 +65,40 @@ export function GetAssuranceType (params) {
  * @param {String} clientToken
  */
 export function GetFoodInfo (params) {
-  var url = 'v1/foodservice/foods/2020-07-02/Shang%20Hai/Su%20Zhou/D1345'
+  var url = 'v1/foodservice/foods/' + params.date + '/' + params.startStation + '/' + params.endStation + '/' + params.tripId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 
-export function QueryMyOrderList (params) {
+/**
+ * @description 查询餐食信息
+ * @param {String} date
+ * @param {String} startStation
+ * @param {String} endStation
+ * @param {String} tripId
+ * @param {String} clientToken
+ */
+export function PreserveTicket (params, url) {
+  return request({
+    url: url,
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * @description 查询订单列表
+ * @param {String} clientId
+ */
+export function QueryMyOrderList (clientId) {
   var url = 'v1/orderservice/order/refresh'
   return request({
     url: url,
     method: 'post',
     data: {
-      loginId: '',
+      loginId: clientId,
       enableStateQuery: false,
       enableTravelDateQuery: false,
       enableBoughtDateQuery: false,
@@ -92,13 +110,17 @@ export function QueryMyOrderList (params) {
   })
 }
 
-export function QueryMyOtherOrderList (params) {
+/**
+ * @description 查询我的其他订单列表
+ * @param {String} clientId
+ */
+export function QueryMyOtherOrderList (clientId) {
   var url = 'v1/orderOtherService/orderOther/refresh'
   return request({
     url: url,
     method: 'post',
     data: {
-      loginId: '',
+      loginId: clientId,
       enableStateQuery: false,
       enableTravelDateQuery: false,
       enableBoughtDateQuery: false,
@@ -110,12 +132,11 @@ export function QueryMyOtherOrderList (params) {
   })
 }
 
-export function QueryMyConsign (params) {
-  var url = 'v1/consignservice/consigns/account/'
+export function QueryMyConsign (clientId) {
+  var url = 'v1/consignservice/consigns/account/' + clientId
   return request({
     url: url,
-    method: 'get',
-    params: params
+    method: 'get'
   })
 }
 

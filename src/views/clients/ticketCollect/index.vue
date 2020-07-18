@@ -69,10 +69,12 @@
 <script>
 import dayjs from 'dayjs'
 import { QueryMyOrderList, CollectTicket } from '@/api/api'
+import util from '@/libs/util.js'
 export default {
   name: 'orderList',
   data () {
     return {
+      clientId: null,
       tblLoading: true,
       orderList: [],
       collect_order_id: '',
@@ -81,12 +83,13 @@ export default {
     }
   },
   mounted () {
+    this.clientId = util.cookies.get('client_id')
     this.getOrderList()
   },
   methods: {
     getOrderList () {
       this.tblLoading = true
-      QueryMyOrderList()
+      QueryMyOrderList(this.clientId)
         .then(res => {
           this.orderList = res
           this.tblLoading = false

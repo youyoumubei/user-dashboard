@@ -188,11 +188,18 @@
 
 <script>
 import dayjs from 'dayjs'
-import { QueryBookingContacts, GetAssuranceType, GetFoodInfo } from '@/api/api'
+import util from '@/libs/util'
+import {
+  QueryBookingContacts,
+  GetAssuranceType,
+  GetFoodInfo,
+  PreserveTicket
+} from '@/api/api'
 export default {
   name: 'ticketBook',
   data () {
     return {
+      clientId: null,
       step: 0,
       tblLoading: true,
       contactFormLoading: false,
@@ -236,6 +243,7 @@ export default {
   },
   mounted () {
     this.ticketInfo = this.$route.params
+    this.clientId = util.cookies.get('client_id')
     this.getBookingContacts()
 
     GetAssuranceType()
@@ -243,7 +251,7 @@ export default {
         this.assuranceList = res
       })
 
-    GetFoodInfo()
+    GetFoodInfo(this.ticketInfo)
       .then(res => {
         this.trainFoodList = res.trainFoodList[0].foodList
         var storeList = res.foodStoreListMap
@@ -276,7 +284,7 @@ export default {
     },
     getBookingContacts () {
       this.tblLoading = true
-      QueryBookingContacts()
+      QueryBookingContacts(this.clientId)
         .then(res => {
           this.contactList = res
           this.tblLoading = false
@@ -300,7 +308,7 @@ export default {
     },
     preserve () {
       let params = {
-        accountId: '4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f',
+        accountId: this.clientId,
         contactsId: this.selectedContact.id,
         hanleDate: dayjs().format('YYYY-MM-DD'),
         assurance: this.serviceForm.assurance,
@@ -328,32 +336,16 @@ export default {
         params = Object.assign({}, params, this.consignForm)
       }
       console.log(params)
-
+      let url = 'v1/preserveservice/preserve'
       if (this.ticketInfo.tripId.startsWith('G') || this.ticketInfo.tripId.startsWith('D')) {
-        console.log('G')
-        // path = "/api/v1/preserveservice/preserve";
+        url = 'v1/preserveservice/preserve'
       } else {
-        // path = "/api/v1/preserveotherservice/preserveOther";
-        console.log('O')
+        url = 'v1/preserveotherservice/preserveOther'
       }
-      // accountId: "4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"
-      // assurance: "0"
-      // consigneeName: "test1"
-      // consigneePhone: "123456789"
-      // consigneeWeight: 1
-      // contactsId: "32b6cfa5-4565-4e85-b496-673f7af138a3"
-      // date: "2020-07-03"
-      // foodName: "Bone Soup"
-      // foodPrice: 2.5
-      // foodType: 1
-      // from: "Shang Hai"
-      // handleDate: "2020-07-02"
-      // isWithin: false
-      // seatType: "2"
-      // stationName: ""
-      // storeName: ""
-      // to: "Su Zhou"
-      // tripId: "D1345"
+      PreserveTicket(params, url)
+        .then(res => {
+          this.$message.success('success, please go to order list to pay for it!')
+        })
     }
   }
 }

@@ -218,6 +218,7 @@ export default {
   name: 'orderList',
   data () {
     return {
+      clientId: null,
       step: 0,
       tblLoading: true,
       consignFormLoading: false,
@@ -270,18 +271,19 @@ export default {
     }
   },
   mounted () {
+    this.clientId = util.cookies.get('client_id')
     this.getOrderList()
   },
   methods: {
     getOrderList () {
       this.tblLoading = true
       this.orderList = []
-      QueryMyOrderList()
+      QueryMyOrderList(this.clientId)
         .then(res => {
           this.orderList = this.orderList.concat(res)
           this.tblLoading = false
         })
-      QueryMyOtherOrderList()
+      QueryMyOtherOrderList(this.clientId)
         .then(res => {
           this.orderList = this.orderList.concat(res)
         })
@@ -339,7 +341,7 @@ export default {
             cancelButtonText: 'No',
             type: 'warning'
           }).then(() => {
-            CancelOrder(row.id, util.cookies.get('client_id'))
+            CancelOrder(row.id, this.clientId)
               .then(res => {
                 this.$message({
                   type: 'success',
